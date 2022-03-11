@@ -1,0 +1,24 @@
+{
+    "name": "blackspot/laravel-starter",
+    "type": "library",
+    "description": "Classes, components, files, and helpers to focus on developing business logic and not solving generic troubles.",
+    "license": "MIT",
+    "autoload": {        
+        "psr-4": {
+            "BlackSpot\\Starter\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Guillermo Rodriguez",
+            "email": "guillermo.blackspot@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.3|^8.0"
+    }
+}

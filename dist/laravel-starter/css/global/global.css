@@ -1,0 +1,280 @@
+/* Fixing bootstrap components */
+
+/* /end Fixing bootstrap components */
+
+.is-not-list{
+    list-style: none;    
+    margin: 0;
+    padding: 0;
+}
+.divider{
+    height: 1px;
+    width: 100%;
+    background-color: rgb(227 227 227);
+}
+.border-bottom-form-sub-title{
+    font-size: 1rem;
+    border-bottom: 1px solid rgb(227 227 227);
+}
+
+.c-pointer{
+    cursor: pointer;    
+}
+.c-inherit{
+    cursor: inherit;
+}
+.c-pointer-events-none{
+    pointer-events: none;
+}
+.bg-light-grey{
+    background-color: #0000000d;
+}
+.bg-warm-blue{
+    background-color: rgb(184 218 255);
+}
+.rounded-sm{
+    border-radius: 0.375rem !important;
+}
+.btn-bg-white{
+    background-color: rgb(255 255 255) !important;
+}
+.border-blue{
+    border-width: 1px;
+    border-color: var(--primary);
+}
+.btn-white-blue{
+    border-radius: 0.375rem !important;   
+    background-color: rgb(255 255 255) !important;
+    color: var(--primary);
+    border-width: 1px;
+    border-color: var(--primary);
+    letter-spacing: .05em;
+    line-height: 1rem;
+    font-weight: 500;
+    font-size: .75rem;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.btn-white-blue:hover{
+    background-color: rgb(0 123 255 / 21%) !important
+}
+
+/** Disabling content **/
+
+.disable-content:not(._not_deactivate){
+    pointer-events: none;
+    background-color: #ebebeb;
+}
+.disable-all-form-inputs input:not(._not_deactivate),
+.disable-all-form-inputs textarea:not(._not_deactivate),
+.disable-all-form-inputs button:not(._not_deactivate),
+.disable-all-form-inputs select:not(._not_deactivate){
+    pointer-events: none;
+    background-color: #ebebeb;
+}
+.disable-content-for-disableables .disablable:has(._deactivate){
+    pointer-events: none;
+    background-color: #ebebeb;
+}
+.disable-all-form-inputs-for-disableables input:has(._deactivate),
+.disable-all-form-inputs-for-disableables textarea:has(._deactivate),
+.disable-all-form-inputs-for-disableables button:has(._deactivate),
+.disable-all-form-inputs-for-disableables select:has(._deactivate){
+    pointer-events: none;
+    background-color: #ebebeb;
+}
+
+
+/** Table **/ 
+
+table thead tr th {
+    white-space: nowrap;
+}
+table td {
+    vertical-align: middle !important;
+}
+/* 
+@media (max-width: 767px) {
+    .table-responsive .dropdown-menu,
+    .table-responsive .dropdown-toggle {
+          position: static !important;
+    }
+}
+  
+@media (min-width: 768px) {
+    .table-responsive {
+        overflow: visible;
+    }
+} */
+
+
+.hover-toggling-selected:hover{
+    background-color: #0000000d;
+}
+.hover-toggling-selected.selected{
+    background-color:rgb(65 184 131);
+    color: #fff;
+}
+.hover-toggling-selected.selected:hover{
+    background-color: rgb(255 106 106) !important;
+    color: #fff !important;
+}
+.hover-toggling-selected:hover::after{
+    content: "Seleccionar";
+    position: absolute;
+    right: 5px;
+    top: 12px;
+}
+.hover-toggling-selected.selected:hover::after{
+    content: "Quitar";
+    position: absolute;
+    right: 5px;
+    top: 12px;
+}
+.modal-xl{
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0px !important;
+}
+.modal-dialog.modal-xl {
+    width:100vw !important;
+    height:100vh !important;
+    margin:0 !important;
+    padding:0 !important;
+    max-width:none !important;
+}
+.modal-dialog.modal-xl > .modal-content {
+    height:auto !important;
+    height:100vh !important;
+    border-radius:0 !important;
+    border:none !important;
+}
+.modal-dialog.modal-xl > .modal-content > .modal-body {
+    overflow-y:auto !important;
+}
+
+.no-white-space{
+    white-space: nowrap;
+}
+
+/** Texts **/
+
+.text-black{
+    color: #000;
+}
+.text-red{
+    color: #b22222;
+}
+
+.fw-800{
+    font-weight: 800;
+}
+
+/** Hovers **/
+
+.hover-light-grey:hover{
+    background-color: #0000000d;
+}
+
+/** Display **/
+.d-iblock{
+    display: inline-block;
+}
+.d-flex{
+    display: flex;
+}
+
+/** Modals */
+.simple-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+    /* Modal Content/Box */
+.simple-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+    /* The Close Button */
+span.simple-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.simple-close:hover,
+.simple-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* Pluggins */
+
+/* Select2 */
+
+.select2-container--default .select2-results__option[aria-selected=true]:hover,
+.select2-container--default .select2-results__option[aria-selected=true],
+.select2-results__option.select2-results__option--selectable.select2-results__option--highlighted{
+    background-color: rgb(0 0 0 / 5%) !important;
+    color: #000;
+}
+
+/* , */
+.select2-results__option.select2-results__option--selectable.select2-results__option--selected{
+    background-color: rgb(65 184 131) !important;
+    color: #ffffff !important;
+}
+
+.select2-results__option.select2-results__option--selectable.select2-results__option--selected:hover{
+    background-color: rgb(255 106 106) !important;
+    color: #ffffff !important;
+}
+.select2-selection__choice{
+    background-color: rgb(65 184 131) !important;
+    color: #ffffff !important;
+    padding: 5px !important;
+    border: none !important;
+}
+.select2-selection__choice .select2-selection__choice__remove{
+    height: 100%;
+    border: none !important;
+    color: #ffffff !important;
+    margin-left: 4px !important;
+}   
+.select2-selection__choice .select2-selection__choice__remove:hover{
+    color: rgb(255 106 106) !important;
+    background-color: rgb(65 184 131) !important;
+}
+
+.select2-selection__choice .select2-selection__choice__display{
+    padding-left: 16px !important;
+}   
+
+.select2-dropdown.select2-dropdown--above,
+.select2-dropdown.select2-dropdown--below
+{
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    border: 1px solid rgb(222 226 230)!important;
+}
+
+.select2-selection.select2-selection--single {
+    height: 36px !important;
+    border: 1px solid rgb(227 227 227) !important;
+    padding: 2px;
+}
+/* end select2 */
