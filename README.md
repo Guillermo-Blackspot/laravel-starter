@@ -1,0 +1,1 @@
+### Laravel Starter Package for BlackSpot
