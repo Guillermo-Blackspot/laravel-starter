@@ -169,7 +169,9 @@ class SelectMultipleComponent extends Component
 
         if ($this->isInSelectedItemsArray($item) == false && ($addingItem || is_null($addingItem) )) {   
             $this->selectedItems[$item] = $item;
-            $this->newItemAdded($item);
+            if (method_exists($this, 'newItemAdded')) {
+                $this->newItemAdded($item);
+            }
             $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'add');    
         }
 
@@ -193,7 +195,9 @@ class SelectMultipleComponent extends Component
             $this->selectedItems = array_filter($this->selectedItems, function($selectedItem, $selectedId) use($item) {             
                 return $selectedId != $item;
             },ARRAY_FILTER_USE_BOTH);
-            $this->itemRemoved($item);
+            if (method_exists($this, 'itemRemoved')) {
+                $this->itemRemoved($item);
+            }
             $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'remove');
         }
     }
