@@ -10,8 +10,6 @@
 
         <title>{{ $section ?? 'Admin - '.config('app.name') }}</title>
 
-        <!-- SweetAlert -->
-        <link href="{{ asset('vendor/sweet-alert/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
         <!-- Toastr -->
         <link href="{{ asset('vendor/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css" />
 
@@ -300,16 +298,14 @@
         <script src="{{ asset('vendor/adminto/js/jquery.scrollTo.min.js') }}"></script>
 
         <!-- SweetAlert -->
-        <script defer src="{{ asset('vendor/sweet-alert/sweetalert2.min.js') }}"></script>
-        <!-- Toastr -->
-        <script defer src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>
-        
-        <!-- App js -->
-        <script src="{{ asset('vendor/adminto/js/jquery.core.js') }}"></script>
-        <script src="{{ asset('vendor/adminto/js/jquery.app.js') }}"></script>
-
+        <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.9/dist/sweetalert2.all.min.js"></script>
         <!-- Axios -->
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <!-- Toastr -->
+        <script defer src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>        
+        <!-- App js -->
+        <script src="{{ asset('vendor/adminto/js/jquery.core.js') }}"></script>
+        <script src="{{ asset('vendor/adminto/js/jquery.app.js') }}"></script>        
         <!-- Develper global scripts -->
         <script defer src="{{ asset('vendor/laravel-starter/js/global/global.js') }}"></script>
         <script defer src="{{ asset('vendor/laravel-starter/js/global/sweet-alert2.js') }}"></script>

@@ -206,7 +206,10 @@ class LaravelStarterServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) return;
 
-        Livewire::component('files-manager-view-file', PreviewFile::class);
+        if (class_exists('Livewire\Livewire')) {            
+            Livewire::component('files-manager-view-file', PreviewFile::class);
+        }
+
     }
 
     protected function publishesToGroups(array $paths, $groups = null)
