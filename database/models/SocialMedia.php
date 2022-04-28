@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SocialNetwork extends Model
+class SocialMedia extends Model
 {
     /** 
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'social_networks';
-    public const TABLE_NAME = 'social_networks';
+    protected $table = 'social_media';
+    public const TABLE_NAME = 'social_media';
 
     public function owner()
     {

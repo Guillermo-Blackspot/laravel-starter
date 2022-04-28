@@ -26,6 +26,8 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.3|^8.0"
+        "php": "^7.3|^8.0",
+        "livewire/livewire": "^2.10",
+        "mmo-and-friends/estados-municipios-mexico": "^1.0"
     }
 }
