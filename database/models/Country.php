@@ -12,6 +12,7 @@ class Country extends Model
      * @var string
      */
     protected $table = 'countries';
+    public const TABLE_NAME = 'countries';
 
     /**
      * The attributes that aren't mass assignable.

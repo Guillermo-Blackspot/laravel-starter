@@ -25,7 +25,7 @@ trait Sluggable
      * @param string $prospect
      * @return boolean 
      */
-    private function slugProspectExists($prospect)
+    public function slugProspectExists($prospect)
     {
         $query = DB::table($this->table)
                     ->where($this->getSlugColumn(), $prospect)
@@ -44,7 +44,7 @@ trait Sluggable
      * @param string $fromString
      * @return string
      */
-    private function generateSlugProspect($fromString)
+    public function generateSlugProspect($fromString)
     {   
         if ($this->slugProspectExists($fromString)) {
             $diffStr = Str::slug(Str::random(5));

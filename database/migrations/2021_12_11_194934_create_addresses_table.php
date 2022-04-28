@@ -21,7 +21,7 @@ class CreateAddressesTable extends Migration
             $table->string('municipality');
             $table->text('references')->nullable();
             $table->integer('postal_code');
-            $table->string('google_maps_link')->nullable();
+            $table->text('google_maps_link')->nullable();
             $table->boolean('main')->nullable()->default(false);
             $table->morphs('addressable');
 

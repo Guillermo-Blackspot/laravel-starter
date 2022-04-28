@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    
-
     public function index()
     {
         return view('app.auth.login');
@@ -23,8 +21,7 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {                        
-            session()->flash('success','Bienvenido');
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember', false))) {
             return redirect()->route('admin.index');
         }
 
@@ -33,4 +30,13 @@ class LoginController extends Controller
         return back()->with('error','Usuario no encontrado');
     }
 
+    public function logout(Request $request)
+    {
+        if ($request->confirm == true) {            
+            Auth::logout();
+            return redirect('/');
+        }
+
+        return redirect()->back();
+    }
 }

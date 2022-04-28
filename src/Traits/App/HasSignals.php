@@ -5,9 +5,7 @@ use Closure;
 
 trait HasSignals
 {
-
     public $signals;
-
 
     /**
      * Push callbacks if not exists
@@ -46,7 +44,4 @@ trait HasSignals
 
         return $this;
     }
-
-
-
 }

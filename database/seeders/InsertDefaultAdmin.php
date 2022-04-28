@@ -18,15 +18,9 @@ class InsertDefaultAdmin extends Seeder
         $user = User::create([
             'id' => 1,
             'name'          => 'Demo',
-            'surname'       => 'Super Admin',
-            'photo'         => null, //by default
-            'phone_code'    => null,
-            'phone'         => null,
-            'gender'        => null,
+            'last_name'     => 'Super Admin',
             'email'         => 'demo@admin.com',
             'password'      => bcrypt('secret'),
-            'birthday_date' => null,
-            'VIP'           => 1,
             'slug'          => 'demo-super-admin',
         ]);
 

@@ -102,6 +102,7 @@ function setHideShowPasswordIconOnInputs() {
                         <i class="fa fa-eye" aria-hidden="true"></i>
                     </span>
                 `);
+                input.parentNode.style.position = 'relative';
             });
 }
 

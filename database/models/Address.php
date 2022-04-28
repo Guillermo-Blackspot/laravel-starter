@@ -12,6 +12,7 @@ class Address extends Model
      * @var string
      */
     protected $table = 'addresses';
+    public const TABLE_NAME = 'addresses';
 
     /**
      * The attributes that aren't mass assignable.
@@ -27,4 +28,55 @@ class Address extends Model
      * @var bool
      */
     public $timestamps = true;
+
+
+    /**
+     * ---------------------------+
+     * Helper functions
+     * ---------------------------+
+     */
+
+    public static function getDefaultValidationRules(&$merge = [])
+    {
+        $rules =  [
+            'address.name'             => 'required',
+            'address.address'          => 'required',
+            'address.city'             => 'required',
+            'address.municipality'     => 'required',
+            'address.postal_code'      => 'required',
+            'address.state_id'         => 'required',
+            'address.references'       => 'nullable',
+            'address.main'             => 'nullable',
+            'address.google_maps_link' => 'nullable|url',
+        ];
+
+        if (!empty($merge)) {
+            $rules = $merge = array_merge($merge, $rules);
+        }
+
+        return $rules;
+    }
+    
+    public function getFullAddressAttribute()
+    {
+        return str_replace(', ,',', ' ,$this->address.', '.$this->municipality.', '.$this->postal_code.', '.$this->city.', '.$this->state->name.'.');
+    }
+
+    /**
+     * ---------------------------+
+     * Eloquent relationships
+     * ---------------------------+
+     */
+
+    /**
+     * Get the owning addressable model.
+     */
+    public function addressable(){
+        return $this->morphTo();
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    } 
 }

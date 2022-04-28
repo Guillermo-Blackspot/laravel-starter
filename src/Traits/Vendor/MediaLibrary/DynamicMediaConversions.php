@@ -90,8 +90,8 @@ trait DynamicMediaConversions
             $color      = Arr::get($imagePlaceHolder, 'color', 'ffffff');
             $background = Arr::get($imagePlaceHolder, 'background', '000000');
             $text       = Arr::get($imagePlaceHolder, 'text', 'Sin+{:attr}+o+procesando');
-            $width      = Arr::get($imagePlaceHolder, 'width', 1080);
-            $height     = Arr::get($imagePlaceHolder, 'height', 720);            
+            $width      = Arr::get($imagePlaceHolder, 'width', $width);
+            $height     = Arr::get($imagePlaceHolder, 'height', $height);            
             return str_replace('{:attr}', $modelMutatorAttribute, "{$url}/{$width}x{$height}.jpg/{$background}/{$color}?text={$text}");
         }
 

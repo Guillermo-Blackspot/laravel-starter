@@ -17,6 +17,13 @@
             "email": "guillermo.blackspot@gmail.com"
         }
     ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BlackSpot\\Starter\\LaravelStarterServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "dev",
     "require": {
         "php": "^7.3|^8.0"

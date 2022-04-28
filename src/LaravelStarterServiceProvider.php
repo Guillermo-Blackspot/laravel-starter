@@ -17,6 +17,7 @@ use BlackSpot\Starter\BladeComponents\{
     SimpleFilter,
     Table
 };
+use BlackSpot\Starter\Commands\MakeViewCommand;
 use BlackSpot\Starter\Commands\PublishCommand;
 use BlackSpot\Starter\Livewire\FilesManager\PreviewFile;
 use Exception;
@@ -195,7 +196,8 @@ class LaravelStarterServiceProvider extends ServiceProvider
         if (! $this->app->runningInConsole()) return;
 
         $this->commands([            
-            PublishCommand::class,  // lstarter:publish
+            PublishCommand::class,  // lstarter:publish,
+            MakeViewCommand::class // lstarer:make-view
         ]);
 
     }

@@ -89,7 +89,7 @@ class Slug
      * @param int $maybeOwner
      * @return boolean 
      */
-    private function slugProspectExists($prospect, $maybeOwner = null)
+    public function slugProspectExists($prospect, $maybeOwner = null)
     {
         return  DB::table($this->table)
                     ->where($this->column, $prospect)

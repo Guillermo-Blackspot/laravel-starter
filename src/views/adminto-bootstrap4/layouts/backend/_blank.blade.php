@@ -309,7 +309,7 @@
         <script src="{{ asset('vendor/adminto/js/jquery.app.js') }}"></script>
 
         <!-- Axios -->
-        <script defer src="{{ asset('vendor/axios/axios.min.js') }}"></script>        
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <!-- Develper global scripts -->
         <script defer src="{{ asset('vendor/laravel-starter/js/global/global.js') }}"></script>
         <script defer src="{{ asset('vendor/laravel-starter/js/global/sweet-alert2.js') }}"></script>

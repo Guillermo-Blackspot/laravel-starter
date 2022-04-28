@@ -11,8 +11,9 @@ return [
   | one of the disks you've configured in config/filesystems.php.
   |
   */
+
   'disk_name' => 'filesmanager',
-  
+
   /*
   |------------------------------------------------------------------------------
   | File viewing layouts 
@@ -23,6 +24,7 @@ return [
   | Bootstrap, Tailwind, Bulma or you own styles.
   |
   */
+
   'file_viewing_layouts' => [
     'bootstrap' => 'addons/files-manager/bootstrap-layout'
   ],
@@ -38,12 +40,7 @@ return [
   |
   */
 
-  'file_viewing_disks' => [
-    'filesmanager', 'media',
-  ],
-  
-
-  
+  'file_viewing_disks' => ['filesmanager', 'media'],
 
   /*
   |------------------------------------------------------------------------------
@@ -55,11 +52,10 @@ return [
   | for video, image, or passwords
   |
   */
+
   'validation_rules' => [
     'video' => 'mimetypes:video/x-ms-asf,video/x-flv,video/mp4,application/x-mpegURL,video/MP2T,video/3gpp,video/quicktime,video/x-msvideo,video/x-ms-wmv,video/avi'
   ],
-
-
 
 
   /*
@@ -67,18 +63,16 @@ return [
   | Files and folders
   |------------------------------------------------------------------------------
   |
-  | This array is used for build the files or folders for use in the 
-  | FilesManager.php /trait
-  | You can add folders 'path' => 'folder/subfolder/'
-  | and you can add files too like: 'path' => 'folder/subfolder'
-  | and you can use variable paths for specify one folder for model, example:
-  |
-  | 'users' => 'users/{user}' then you must include in the pathReplacers like:
-  | getFilesFolder('user',['{user}' => $userId])
+  | This array is used for build the files or folders for use in the FilesManager.php /trait
+  | you can use variable paths for specify one folder for model, example:
+  | model => model/{modelId}/gallery' this will be replaced in the FilesManager functions
   |
   */
-  'files_and_folders' =>[
+  'files_and_folders' => [
 
+    /**
+     * The default package files / concrete files
+     */
     'defaults' => [
       'avatars' => [
         'user' => 'defaults/avatars/default_user_avatar.png',
@@ -86,56 +80,100 @@ return [
         'user80x80' => 'defaults/avatars/default_user_avatar_80x80.png'
       ]
     ],
-  
-    'users' => 'users/{user}',
+
+    /**
+     * Custom files and folders
+     */
+    'users' => [
+      'root'    => 'users/{user}',
+      'profile' => 'users/{user}/profile',
+    ],
+
   ],
 
+  /*
+  |------------------------------------------------------------------------------
+  | Model settings
+  |------------------------------------------------------------------------------
+  |
+  | This array is used for define the files manipulations and conversions 
+  | for spatie/media-library
+  |
+  */
+
+  'model_settings' => [
+    
+    /**
+     * "shared" is used for define shared settings and these will be applied
+     * to all files manipulations.
+     * The "image_placeholder" is used for show an loading placeholder when the image
+     * wasn't found and it hasn't a default image or the conversions area processing.
+     */
+    'shared' => [
+      'image_placeholder' => [
+        'url'        => 'https://via.placeholder.com/',
+        'color'      => 'ffffff',
+        'background' => 'ff8400',
+        'text'       => 'Sin+{:attr}+o+procesando',
+        'width'      => 1080,
+        'height'     => 720,
+      ],
+    ],
+
+    /**
+     * Here you can register the conversions
+     * 
+     * conversions => [
+     *    media_collection_name => [
+     *      conversion_name => [
+     *        manipulation (crop or keepOriginalImageFormat, etc..) => value|[values]|null
+     *      ]
+     *    ]
+     * ]
+     */
+    Model::class => [
+      'conversions' => [
+        'gallery' => [
+          'small-images' => [
+            'height' => 80,
+            'width'  => 80,
+            'keepOriginalImageFormat' => null
+          ],          
+        ]
+      ]
+    ],
+  ]
 
   /*
   |------------------------------------------------------------------------------
-  | Copy this disk in the config/filesystmes.php
-  |------------------------------------------------------------------------------
-  | 'disks => [
-  |
-  |   'filesmanager' => [
-  |          'driver'     => 'local',
-  |          'root'       => storage_path('app/files-manager'),
-  |          'url'        => env('APP_URL').'/files-manager',
-  |          'visibility' => 'public',
-  |          //'web_route_uri' => 'media-library/{filename}' //for signed routes
-  |   ],
-  | ]
-  */
-
-  /*
-  |------------------------------------------------------------------------------
-  | Copy this disk in the config/filesystmes.php if you're using spatie-medialibrary
-  |------------------------------------------------------------------------------
-  | 'disks => [
-  |
-  |   'media' => [
-  |       'driver'     => 'local',
-  |       'root'       => storage_path('app/media-library'),
-  |       'url'        => env('APP_URL').'/media-library',
-  |       'visibility' => 'public',
-  |       //'web_route_uri' => 'media-library/{filename}' //for signed routes
-  |   ],
-  | ]
-  */
-
-  /*
-  |------------------------------------------------------------------------------
-  | Copy this symbolic links in the config/filesystmes.php for access to the files
+  | config/filesystmes.php
   |------------------------------------------------------------------------------
   |
-  | 'links' => [ 
-  |    public_path('livewire-files') => storage_path('app/livewire-tmp'),
-  |    public_path('storage-public') => storage_path('app/public'),
-  |    public_path('files-manager')  => storage_path('app/files-manager'),
-  |    public_path('media-library')  => storage_path('app/media-library'),
+  | -- Files manager disk
+  |
+  |   filesmanager => [
+  |     driver     => local
+  |     root       => storage_path(app/files-manager)
+  |     url        => env(APP_URL)./files-manager
+  |     visibility => public'
+  |   ]
+  |
+  | -- Copy this disk if you're using spatie-medialibrary
+  |
+  |   media => [
+  |       driver     => local
+  |       root       => storage_path(app/media-library)
+  |       url        => env(APP_URL)./media-library
+  |       visibility => public
+  |   ]
+  |
+  | -- Copy this symbolic links for access to the files
+  |
+  | links => [ 
+  |    public_path(livewire-files) => storage_path('app/livewire-tmp')
+  |    public_path(files-manager)  => storage_path('app/files-manager')
+  |    public_path(media-library)  => storage_path('app/media-library')
   | ]
   */
-
-
 
 ];
