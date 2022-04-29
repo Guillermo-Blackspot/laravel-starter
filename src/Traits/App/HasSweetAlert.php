@@ -1,27 +1,42 @@
 <?php
+
 namespace BlackSpot\Starter\Traits\App;
 
 use Illuminate\Support\Arr;
 
-trait HasSweetAlert{
+trait HasSweetAlert
+{
 
   public $sweetalert_browser_event = 'browser_event.sweetalert2';
 
-  public function sweetAlert(array $detail = [])
+  public function sweetAlertComponent(array $component = [])
   {
-      $this->dispatchBrowserEvent($this->sweetalert_browser_event.'.open',$detail);
+    $this->dispatchBrowserEvent($this->sweetalert_browser_event . '.open', $component);
   }
 
   public function sweetAlertClose()
   {
-      $this->dispatchBrowserEvent($this->sweetalert_browser_event.'.close');
+    $this->dispatchBrowserEvent($this->sweetalert_browser_event . '.close');
   }
 
-  public function sweetAlertNoCancelable($type, $title, $text = null, $emits = [])
+  private function mixValues($original, array $mixing)
   {
-    return $this->sweetAlertComponent([
+    foreach ($mixing as $key => $value) {
+      if (isset($original[$key])) {
+        $original[$key] = $original[$key] + $value;
+        continue;
+      }
+      $original[$key] = $value;
+    }
+
+    return $original;
+  }
+
+  public function sweetAlertNoCancelable($icon, $title, $text = null, $mixing = [])
+  {
+    $component = $this->mixValues([
       'body' => [
-        'type' => $type,
+        'icon' => $icon,
         'title' => $title,
         'text' => $text,
         'allowOutsideClick' => false,
@@ -30,96 +45,64 @@ trait HasSweetAlert{
         'showCancelButton' => false,
         'showConfirmButton' => false
       ]
-    ], $emits);
+    ], $mixing);
+
+    return $this->sweetAlertComponent($component);
   }
 
-  public function sweetAlertConfirm($icon, $title, $text, $emits = [])
+  public function sweetAlertConfirm($title, $text, $mixing = [])
   {
-    return $this->sweetAlertComponent([
+    $component = $this->mixValues([
       'body' => [
-        'type'  => $icon,
+        'icon' => 'warning',
         'title' => $title,
-        'text'  =>  $text,
-        'allowOutsideClick'  => false,
-        'allowEscapeKey'     => false,
-        'allowEnterKey'      => false,
-        'showCancelButton'   => true,
-        'confirmButtonClass' => 'w-button w-button-green w-mx-15 mx-2 btn btn-success mr-1',
-        'cancelButtonClass'  => 'w-button w-button-red w-mx-15 mx-2 btn btn-danger',
-        'confirmButtonText'  => 'Si, continuar',
-        'cancelButtonText'   => 'No, cancelar',
-        'buttonsStyling'     => false
+        'text' =>  $text,
+        'allowOutsideClick' => false,
+        'allowEscapeKey' => false,
+        'allowEnterKey' => false,
+        'showCancelButton' => true,
+        'customClass' => [
+          'confirmButton' => 'w-button w-button-green w-mx-15 mx-2 btn btn-success rounded mr-1',
+          'cancelButton' => 'w-button w-button-red w-mx-15 mx-2 btn btn-danger rounded '
+        ],
+        'confirmButtonText' => 'Si, continuar',
+        'cancelButtonText' => 'No, cancelar',
+        'buttonsStyling' => false
       ]
-    ], $emits);
+    ], $mixing);
+    return $this->sweetAlertComponent($component);
   }
 
-  public function sweetAlertSuccess($title, $text, $emits = [])
+  public function sweetAlertSuccess($title, $text, $mixing = [])
   {
-    return $this->sweetAlertSimple('success', $title, $text, $emits);
+    return $this->sweetAlertSimple('success', $title, $text, $mixing);
   }
 
-  public function sweetAlertError($title, $text, $emits = [])
+  public function sweetAlertQuestion($title, $text, $mixing = [])
   {
-    return $this->sweetAlertSimple('error', $title, $text, $emits);
+    return $this->sweetAlertSimple('question', $title, $text, $mixing);
   }
 
-  public function sweetAlertInfo($title, $text, $emits = [])
+  public function sweetAlertError($title, $text, $mixing = [])
   {
-    return $this->sweetAlertSimple('info', $title, $text, $emits);
+    return $this->sweetAlertSimple('error', $title, $text, $mixing);
   }
 
-  public function sweetAlertSimple($icon, $title, $text, $emits)
+  public function sweetAlertInfo($title, $text, $mixing = [])
   {
-    return $this->sweetAlertComponent([
+    return $this->sweetAlertSimple('info', $title, $text, $mixing);
+  }
+
+  public function sweetAlertSimple($icon, $title, $text, $mixing)
+  {
+    $component = $this->mixValues([
       'body' => [
-        'type'  => $icon,
+        'icon'  => $icon,
         'title' => $title,
         'text'  => $text,
       ]
-    ], $emits);
+    ], $mixing);
+
+    return $this->sweetAlertComponent($component);
   }
-
-
-
-  public function sweetAlertComponent($component, array $emits = [], $text = null)
-  {      
-    if ($component == 'confirm-delete') {
-      $component = [
-        'body' => [
-          'type'  => 'warning',
-          'title' => 'Confirmar',
-          'text'  =>  $text ?? '¿Desea eliminar este recurso?',
-          'allowOutsideClick'  => false,
-          'allowEscapeKey'     => false,
-          'allowEnterKey'      => false,
-          'showCancelButton'   => true,
-          'confirmButtonClass' => 'w-button w-button-green w-mx-15 mx-2 btn btn-success mr-1',
-          'cancelButtonClass'  => 'w-button w-button-red w-mx-15 mx-2 btn btn-danger',
-          'confirmButtonText'  => 'Si, continuar',
-          'cancelButtonText'   => 'No, cancelar',
-          'buttonsStyling'     => false
-        ]/*,
-        'immediately_after' => [
-          'body' => [
-            'type'  => 'info',
-            'title' => 'Espere..',
-            'text'  => 'Estamos esperando nueva respuesta..',
-            'allowOutsideClick'  => false,
-            'allowEscapeKey'     => false,
-            'allowEnterKey'      => false,
-            'showCancelButton'   => false,
-            'showConfirmButton'  => false,
-          ]
-        ]*/
-      ];          
-    }
-
-    $args = isset($emits['emits'])
-              ? array_merge($component, $emits['emits'], Arr::except($emits,'emits'))
-              : array_merge($component, $emits);
-
-    $this->sweetAlert($args);
-  }
-
-
 }

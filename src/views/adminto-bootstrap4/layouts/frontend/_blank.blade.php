@@ -9,9 +9,7 @@
         <link rel="shortcut icon" href="{{ asset('vendor/adminto/images/favicon.ico') }}">
 
         <title>{{ $section ?? 'Login - '.config('app.name') }}</title>
-
-        <!-- SweetAlert -->
-        <link href="{{ asset('vendor/sweet-alert/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+        
         <!-- Toastr -->
         <link href="{{ asset('vendor/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css" />
         

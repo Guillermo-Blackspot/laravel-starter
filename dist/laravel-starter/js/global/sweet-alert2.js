@@ -21,12 +21,11 @@ function resolveTextOrHtml(text) {
 }
 
 
-swal.info = function(text, enableAll = false){
-
+Swal.info = function(text, enableAll = false){
   let res = resolveTextOrHtml(text);
 
   return this({
-    type: 'info',
+    icon: 'info',
     title: 'Info',
     [res.key]: res.text || '',
     allowOutsideClick: enableAll,
@@ -36,10 +35,10 @@ swal.info = function(text, enableAll = false){
     showConfirmButton: enableAll
   });
 }
-
-swal.loading = function(text){
+ 
+Swal.loading = function(text){
   return this({
-    type: 'info',
+    icon: 'info',
     title: 'Info',
     text: text || 'Cargando información ...',
     allowOutsideClick: false,
@@ -50,9 +49,9 @@ swal.loading = function(text){
   });
 }
 
-swal.noCancelable = function(type,title,text){
+Swal.noCancelable = function(icon,title,text){
   return this({
-    type: type,
+    icon: icon,
     title: title,
     text: text,
     allowOutsideClick: false,
@@ -63,9 +62,9 @@ swal.noCancelable = function(type,title,text){
   });
 }
 
-swal.error = function(title,text){
+Swal.error = function(title,text){
   return this({
-    type: 'error',
+    icon: 'error',
     title: title,
     text: text,
     confirmButtonClass: 'btn btn-success w-button -btn-red',
@@ -75,11 +74,11 @@ swal.error = function(title,text){
     showCancelButton: false,
   })
 }
-
-
-swal.success = function(title, text){
+ 
+ 
+Swal.success = function(title, text){
   return this({
-    type: 'success',
+    icon: 'success',
     title: title,
     text: text,
     confirmButtonColor: '#4fa7f3',
@@ -89,15 +88,14 @@ swal.success = function(title, text){
     showCancelButton: false,
   });
 }
-
-swal.confirm = function(title, text, icon){
-  
+ 
+swal.confirm = function(title, text, icon){   
   let res = resolveTextOrHtml(text);
 
   return this({
     title: title || '¿Deseas continuar?',
     [res.key]: res.text || '',
-    type: icon || 'warning',
+    icon: icon || 'warning',
     showCancelButton: true,
     confirmButtonText: 'Si, Continuar',
     cancelButtonText: 'No, cancelar',
@@ -106,34 +104,68 @@ swal.confirm = function(title, text, icon){
     buttonsStyling: false
   });
 };
+ 
+ 
+function miDisenio(detail) {
+  return Swal.fire({
+     title: 'Are you sure?',
+     text: "You won't be able to revert this!",
+     icon: 'warning',
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, delete it!'
+   }).then((result) => {
+     if (result.isConfirmed) {
+       Swal.fire(
+        'Deleted!',
+        'Your file has been deleted.',
+        'success'
+       );
+     }
+     return result;
+  });
+}
 
 window.addEventListener(SWEET_ALERT_BROWSER_EVENT+'.close', event => swal.close());
 window.addEventListener(SWEET_ALERT_BROWSER_EVENT+'.open', ({detail}) => {
-  swal(detail.body)
-  .then(
-    (result)=> result,
-    (dismiss)=> dismiss
-  )
-  .then((result)=>{
-    let validResult = (detail.with)
-                    ? [result, detail.with]
-                    : [result];
+  const resolveSwal = function(_detail){  
+    if (_detail.body) {
+      return Swal.fire(_detail.body);
+    }else if(_detail.callingDesign){
+      return window[_detail.callingDesign](_detail);
+    }else{
+      throw "No body or caller found!";
+    }
+  };
 
-    if (detail.emit) {
-      Livewire.emit(emit, ...validResult);
+  resolveSwal(detail).then((result)=>{
+    
+    if (!detail.emitOnFail) {
+      if (!result) return 0;      
     }
-    if (detail.emitTo) {
-      Livewire.emitTo(detail.emitTo[0], detail.emitTo[1], ...validResult);
-    }
-    if (detail.emitSelf) {
-      Livewire.emitSelf(detail.emitSelf, ...validResult);
-    }
-    if (detail.emitParent) {
-      Livewire.emitParent(detail.emitParent, ...validResult);
-    }
-    if (Object.keys(detail).join(', ').includes('emit') && result !== 'cancel') {
+
+    // isConfirmed: true
+    // isDenied: false
+    // isDismissed: false
+    // value: true
+
+    let validResult = (detail.with) ? [result, detail.with] : [result];
+    if (detail.emits) {
+      if (Array.isArray(detail.emits)) {
+        detail.emits.forEach(concreteEmit => {
+          let fnEmit = Object.keys(concreteEmit)[0];
+          Livewire[fnEmit](...concreteEmit[fnEmit],  ...validResult);
+        });
+      }else if (typeof detail.emits === 'object') {
+        Object.keys(detail.emits).forEach(concreteEmit => {
+          Livewire[concreteEmit](...detail.emits[concreteEmit],  ...validResult);
+        });
+      }
+    }        
+    if (detail.emits) {
       if (toastr) toastr.info('Espere..');
     }
   })
-  .catch(swal.noop)
+  .catch(({message}) => console.log(message))
 });

@@ -16,6 +16,10 @@ return [
 
   'permissions' => [    
     'super-admin' => 'im-a-super-admin-and-i-have-full-access', //full access 
+  ],
+
+  'sweetAlert2' => [
+    'mixingAll' => []
   ]
   
 ];
