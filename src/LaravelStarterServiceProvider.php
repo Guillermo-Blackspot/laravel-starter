@@ -142,10 +142,10 @@ class LaravelStarterServiceProvider extends ServiceProvider
             /***
              * Assets (js,css,img, ...)
              */
-            __DIR__ . '/../adminto'               => public_path('vendor/adminto'),
-            __DIR__ . '/../laravel-starter'       => public_path('vendor/laravel-starter'),
-            __DIR__ . '/../toastr'                => public_path('vendor/toastr'),
-            __DIR__ . '/../storage/files-manager' => storage_path('app/files-manager'),
+            __DIR__ . '/../dist/adminto'               => public_path('vendor/adminto'),
+            __DIR__ . '/../dist/laravel-starter'       => public_path('vendor/laravel-starter'),
+            __DIR__ . '/../dist/toastr'                => public_path('vendor/toastr'),
+            __DIR__ . '/../dist/storage/files-manager' => storage_path('app/files-manager'),
 
             /**
              * Configs

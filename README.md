@@ -27,7 +27,7 @@ Tambien es de mucha ayuda para el crecimiento acelerado de los proyectos con Lar
 		- `--views-structure --vs(alias)` Esta opción creara la estructura de carpetas para un proyecto en blanco (carpetas backend y fronted)
 		- `--blade-components --bc(alias)` Esta opción publica los componentes de laravel-starter para que puedan visualizarse el código pero los cambios que se realicen no son tomados en cuenta
 		- `--theme  -t(alias)` Esta opción indica el template del cual se tomaran las vistas que se creen. Por defecto es "adminto-bootstrap-4"
-		- `for-empty-project` Esta opción indica que todas las anteriores opciones serán ejecutadas ya que se esta empezando un proyecto nuevo
+		- `--for-empty-project` Esta opción indica que todas las anteriores opciones serán ejecutadas ya que se esta empezando un proyecto nuevo
 
 
 
