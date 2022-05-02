@@ -1,4 +1,4 @@
-@extends('app.layouts.frontend._blank')
+@extends('app.layouts.frontend.public')
 
 @section('content')
     <div class="account-pages" style="background-image: none"></div>

@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\State;
-use App\Services\EstadosMunicipiosMexico\EstadosMunicipiosMexico;
 use Illuminate\Database\Seeder;
+use MmoAndFriends\Mexico\Mexico;
 
 class InsertStates extends Seeder
 {
@@ -15,6 +15,6 @@ class InsertStates extends Seeder
      */
     public function run()
     {
-        //State::insert(EstadosMunicipiosMexico::getCountries());
+        State::insert(Mexico::getStates('array'));
     }
 }

@@ -9,9 +9,11 @@ class PublishCommand extends Command
     protected $signature = 'laravel-starter:publish 
         { --t|theme?=adminto-bootstrap-4 : The views theme should be published (layouts)},
         { --essentials : The laravel starter essentials },
-        { --database : Indicates if laravel-starter\'s database should be published },
+        { --db|database : Indicates if laravel-starter\'s database should be published },
         { --auth : Indicates if all auth files (login, register) should be published },
-        { --blade-components : Indicates if laravel-starter\'s components should be published (only for view the attributes, changes not be considered) }';
+        { --bc|blade-components : Indicates if laravel-starter\'s components should be published (only for view the attributes, changes not be considered) },
+        { --vs|views-structure : Indicates if the laravel-starter\'s views structure should be published },
+        { --for-empty-project : All files, components and options should be published }';
 
     protected $description = 'Publish Laravel Starter configuration';
 
@@ -25,7 +27,12 @@ class PublishCommand extends Command
             $this->publishAuthFiles();
         } else if ($this->option('essentials')) {
             $this->publishEssentials();
-        }else {
+        }else if ($this->option('for-empty-project')) {
+            $this->publishEssentials();
+            $this->publishBladeComponents();
+            $this->publishDatabase();
+            $this->publishAuthFiles();
+        } else{
             $this->info('No --option found');
         }
 
@@ -60,5 +67,5 @@ class PublishCommand extends Command
     public function publishAuthFiles()
     {
         $this->call('vendor:publish', ['--tag' => 'laravel-starter:auth', '--force' => true]);   
-    }
+    }    
 }

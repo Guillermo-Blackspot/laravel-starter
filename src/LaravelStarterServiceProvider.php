@@ -148,11 +148,6 @@ class LaravelStarterServiceProvider extends ServiceProvider
             __DIR__ . '/../storage/files-manager' => storage_path('app/files-manager'),
 
             /**
-             * Views structure
-             */
-            __DIR__ . '/views/structure' => resource_path('views/'),
-
-            /**
              * Configs
              */
             __DIR__ . '/../config/filesmanager.php'                       => base_path('config/filesmanager.php'),
@@ -165,6 +160,16 @@ class LaravelStarterServiceProvider extends ServiceProvider
             __DIR__ . '/../routes/defaults.php' => base_path('routes/web.php'),
 
         ], ['laravel-starter', 'laravel-starter:essentials']);
+
+
+
+        /**
+         * Views structure
+        */
+        $this->publishes([
+            __DIR__ . '/views/structure' => resource_path('views/'),
+        ], ['laravel-starter', 'laravel-starter:views-structure']);
+
 
         /**
          * Auth controller, views and routes
