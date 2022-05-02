@@ -162,30 +162,11 @@
                     <div id="sidebar-menu">
                         <ul>
                         	<li class="text-muted menu-title">Navegación</li>                                                    
-                            @can('viewAny', 'App\Models\User')                                
-                                <li>
-                                    <a href="#" class="waves-effect"><i class="mdi mdi-account"></i><span>Usuarios </span></a>
-                                </li>
-                            @endcan                            
-                            @if (user()->can('viewAny', 'App\Models\Role') || user()->can('viewAny', 'App\Models\Permission'))                                
-                                <li class="has_sub">                                
-                                    <a href="javascript:void(0);" class="waves-effect bg-blackpanel"><i class="dripicons-gear"></i><span>Configuración </span> <span class="dripicons-chevron-right"></span></a>
-                                    <ul class="list-unstyled">                                    
-                                        @can('viewAny', 'App\Models\Role')                                        
-                                            <li>
-                                                <a href="{{ route('admin.configuration.roles.index') }}" class="waves-effect"> <span> Roles </span> </a>
-                                            </li>
-                                        @endcan
-                                        @can('viewAny', 'App\Models\Permission')                                        
-                                            <li>
-                                                <a href="{{ route('admin.configuration.permissions.index') }}" class="waves-effect"> <span> Permisos </span> </a>
-                                            </li>
-                                        @endcan
-                                    </ul>
-                                </li>
-                            @endif
                             <li>
-                                <a href="{{ route('auth.logout',['confirm' => true]) }}" class="waves-effect"><i class="dripicons-exit"></i><span>Cerrar sesión </span></a>
+                                <a href="#" class="waves-effect"><i class="mdi mdi-account"></i><span>Usuarios </span></a>
+                            </li>                            
+                            <li>
+                                <a href="#" class="waves-effect"><i class="dripicons-exit"></i><span>Cerrar sesión </span></a>
                             </li>
                         </ul>
                         <div class="clearfix"></div>
