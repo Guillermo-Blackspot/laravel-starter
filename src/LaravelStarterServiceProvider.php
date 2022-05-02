@@ -142,7 +142,10 @@ class LaravelStarterServiceProvider extends ServiceProvider
          * Assets js,css,img | lstarter | lstarter:assets
          */
         $this->publishesToGroups([            
-            __DIR__.'/../dist' => public_path('vendor')
+            __DIR__.'/../adminto' => public_path('vendor/adminto'),
+            __DIR__.'/../laravel-starter' => public_path('vendor/laravel-starter'),
+            __DIR__.'/../toastr' => public_path('vendor/toastr'),
+            __DIR__.'/../storage/files-manager' => storage_path('app/files-manager'),
         ], ['lstarter', 'lstarter:assets']);
         
         /**
