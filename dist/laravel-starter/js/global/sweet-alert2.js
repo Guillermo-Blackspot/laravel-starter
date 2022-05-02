@@ -24,7 +24,7 @@ function resolveTextOrHtml(text) {
 Swal.info = function(text, enableAll = false){
   let res = resolveTextOrHtml(text);
 
-  return this({
+  return this.fire({
     icon: 'info',
     title: 'Info',
     [res.key]: res.text || '',
@@ -37,7 +37,7 @@ Swal.info = function(text, enableAll = false){
 }
  
 Swal.loading = function(text){
-  return this({
+  return this.fire({
     icon: 'info',
     title: 'Info',
     text: text || 'Cargando información ...',
@@ -50,7 +50,7 @@ Swal.loading = function(text){
 }
 
 Swal.noCancelable = function(icon,title,text){
-  return this({
+  return this.fire({
     icon: icon,
     title: title,
     text: text,
@@ -63,7 +63,7 @@ Swal.noCancelable = function(icon,title,text){
 }
 
 Swal.error = function(title,text){
-  return this({
+  return this.fire({
     icon: 'error',
     title: title,
     text: text,
@@ -77,7 +77,7 @@ Swal.error = function(title,text){
  
  
 Swal.success = function(title, text){
-  return this({
+  return this.fire({
     icon: 'success',
     title: title,
     text: text,
@@ -92,7 +92,7 @@ Swal.success = function(title, text){
 swal.confirm = function(title, text, icon){   
   let res = resolveTextOrHtml(text);
 
-  return this({
+  return this.fire({
     title: title || '¿Deseas continuar?',
     [res.key]: res.text || '',
     icon: icon || 'warning',

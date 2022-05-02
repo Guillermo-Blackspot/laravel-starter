@@ -74,17 +74,20 @@ class User extends Authenticatable implements HasMedia
     {      
         return $this->name.' '.$this->surname;
     }
-    public function getFullPhoneAttribute()
+
+    public function getPhoneWithCodeAttribute()
     {      
-        if ($this->phone_code != '' && $this->phone_code != null) {        
-            return "({$this->phone_code})".' '.$this->phone;
+        if (optional($this->cellphone_code)->dial_code != '' && optional($this->cellphone_code)->dial_code != null) {        
+            return '('.optional($this->cellphone_code)->dial_code.') '.$this->cellphone;
         }
-        return $this->phone_code.' '.$this->phone;
+        return optional($this->cellphone_code)->dial_code.' '.$this->cellphone;
     }
+
     public function getInlineRolesAttribute()
     {
         return $this->roles->implode('name',', ');
     }
+    
     public function getReadableGenderAttribute()
     {
         switch ($this->gender) {
@@ -94,6 +97,7 @@ class User extends Authenticatable implements HasMedia
             default: return 'Prefiero no decirlo'; break;
         }
     }
+
     public function getPhotoLinkAttribute()
     {      
         if ($this->photo == null) {
@@ -105,44 +109,17 @@ class User extends Authenticatable implements HasMedia
         return $this->getFileAsset('users',['{user}' => $this->id],true) . '/' . $this->photo;
     }
     
-
+    public function cellphone_code()
+    {
+        return $this->belongsTo(Country::class, 'cellphone_code_id');
+    }
+    
     /**
      *  Relations
      */
     public function media_photo()
     {
         return $this->media()->where('collection_name','photo');
-    }
-
-    /**
-     * Dimensions
-     */
-    public function getDimensions($collection = null, $dimension = null)
-    {
-        $dimensions = [
-            'photo' => [
-                'small'   => [80,80],
-            ],
-        ];
-
-        if ($collection == null && $dimension == null) {
-            return $dimensions;
-        }
-
-        return $dimensions[$collection][$dimension];
-    }
-
-    /**
-     * [
-     *   media-library-collection => db-model-attribute,
-     *   thumb => thumbnail
-     * ]
-     */
-    public function getFacadeCollectionFiles()
-    {
-        return [
-            'photo' => 'photo',
-        ];
     }
 
     public function registerMediaCollections(): void

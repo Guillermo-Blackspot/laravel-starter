@@ -6,78 +6,59 @@ use Illuminate\Console\Command;
 
 class PublishCommand extends Command
 {
-    protected $signature = 'lstarter:publish 
-        { --assets : Indicates if laravel-starter\'s front-end assets should be published },
-        { --config : Indicates if laravel-starter\'s config file should be published },
-        { --views-structure : Indicates if laravel-starter\'s directory structure should be published },
-        { --adminto-bootstrap4 : Indicates if laravel-starter\'s adminto bootstrap4 views should be published },
-        { --components : Indicates if laravel-starter\'s components should be published (only for view the attributes, changes not be considered) },
+    protected $signature = 'laravel-starter:publish 
+        { --t|theme?=adminto-bootstrap-4 : The views theme should be published (layouts)},
+        { --essentials : The laravel starter essentials },
         { --database : Indicates if laravel-starter\'s database should be published },
-        { --default : Indicates if laravel-starter\'s default config should be published },
-        { --login : Indicates if laravel-starter\'s login should be published }';
-
+        { --auth : Indicates if all auth files (login, register) should be published },
+        { --blade-components : Indicates if laravel-starter\'s components should be published (only for view the attributes, changes not be considered) }';
 
     protected $description = 'Publish Laravel Starter configuration';
 
     public function handle()
     {
-        if ($this->option('assets')) {
-            $this->publishAssets();
-        } elseif ($this->option('config')) {
-            $this->publishConfig();
-        } elseif ($this->option('views-structure')) {
-            $this->publishViewsStructure();
-        } elseif ($this->option('adminto-bootstrap4')) {
-            $this->publishAdmintoBootstrap4();
-        } elseif ($this->option('components')) {
-            $this->publishComponents();
+        if ($this->option('blade-components')) {
+            $this->publishBladeComponents();
         } elseif ($this->option('database')) {
             $this->publishDatabase();
-        }elseif ($this->option('login')) {
-            $this->publishLogin();
-        } else if ($this->option('default')) {
-            $this->publishAssets();
-            $this->publishConfig();
-            $this->publishViewsStructure();
-            $this->publishAdmintoBootstrap4();
-            $this->publishDatabase();            
-            $this->publishLogin();
+        }elseif ($this->option('auth')) {
+            $this->publishAuthFiles();
+        } else if ($this->option('essentials')) {
+            $this->publishEssentials();
         }else {
             $this->info('No --option found');
         }
+
+        $this->publishAdmintoBootstrap4Theme();
     }
 
-    public function publishAssets()
+    public function publishEssentials()
     {
-        $this->call('vendor:publish', ['--tag' => 'lstarter:assets', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'laravel-starter:essentials', '--force' => true]);
     }
 
-    public function publishConfig()
+    public function publishAdmintoBootstrap4Theme()
     {
-        $this->call('vendor:publish', ['--tag' => 'lstarter:config', '--force' => true]);
+        if ($this->hasArgument('theme')) {
+            if ($this->argument('theme') == 'adminto-bootstrap-4') {
+                $this->call('vendor:publish', ['--tag' => 'laravel-starter:adminto-bootstrap-4-theme', '--force' => true]);
+            }
+        }else{
+            $this->call('vendor:publish', ['--tag' => 'laravel-starter:adminto-bootstrap-4-theme', '--force' => true]);
+        }
     }
 
-    public function publishViewsStructure()
+    public function publishBladeComponents()
     {
-        $this->call('vendor:publish', ['--tag' => 'lstarter:views-structure', '--force' => true]);
-    }
-
-    public function publishAdmintoBootstrap4()
-    {
-        $this->call('vendor:publish', ['--tag' => 'lstarter:adminto-bootstrap4', '--force' => true]);
-    }
-
-    public function publishComponents()
-    {
-        $this->call('vendor:publish', ['--tag' => 'lstarter:components', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'laravel-starter:blade-components', '--force' => true]);
     }
 
     public function publishDatabase()
     {
-        $this->call('vendor:publish', ['--tag' => 'lstarter:database', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'laravel-starter:database', '--force' => true]);
     }
-    public function publishLogin()
+    public function publishAuthFiles()
     {
-        $this->call('vendor:publish', ['--tag' => 'lstarter:login', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'laravel-starter:auth', '--force' => true]);   
     }
 }

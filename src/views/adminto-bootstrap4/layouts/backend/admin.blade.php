@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <link rel="shortcut icon" href="{{ asset('vendor/adminto/images/favicon.ico') }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
         <meta name="author" content="Coderthemes">
 
-        <link rel="shortcut icon" href="{{ asset('vendor/adminto/images/favicon.ico') }}">
-
         <title>{{ $section ?? 'Admin - '.config('app.name') }}</title>
-
+        
+        <link rel="shortcut icon" href="{{ asset('vendor/adminto/images/favicon.ico') }}">
         <!-- Toastr -->
         <link href="{{ asset('vendor/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css" />
 
@@ -25,6 +25,39 @@
         @livewireStyles
         @stack('styles')
         @stack('scripts.head')
+        <style>
+            .topbar .topbar-left, .navbar-default{
+                border-top: none !important;
+            }
+
+
+            .top-bar-left, 
+            .side-menu,
+            .topbar .topbar-left,
+            ul li a.waves-effect
+            {
+                /** rgb(0 6 57) **/
+                background-color: rgb(0 6 57) !important;
+                color: rgb(144 151 167) !important;
+            }
+            ul li a.waves-effect:hover{
+                color: #fff !important;
+            }
+            .simple-filter-colors{
+                background-color: rgb(91 105 188) !important;
+                color: #fff !important;
+            }
+            
+            #wrapper.enlarged .left.side-menu #sidebar-menu > ul > li > a:hover {
+                /* background-color: var(--success) !important;
+                color: rgb(255 255 255) !important; */
+                background-color: rgb(0 6 57) !important;
+                color: #ffffff !important;
+            }
+            .modal-body{
+                padding: 0px !important;
+            }
+        </style>
     </head>
 
 
@@ -38,9 +71,11 @@
 
                 <!-- LOGO -->
                 <div class="topbar-left">
-                    <a href="index.html" class="logo">
-                        <span>Your<span>AppName</span></span><i class="mdi mdi-layers"></i>
-                    </a>
+                    <div class="user-box">   
+                        <div class="user-img">
+                            Your logo
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Button mobile view to collapse sidebar menu -->
@@ -61,20 +96,7 @@
                         
 
                         <nav class="navbar-custom">
-
-                            <ul class="list-unstyled topbar-right-menu float-right mb-0">
-
-                                <li class="nav-item dropdown mr-1">
-                                    <a class="nav-link dropdown-toggle font-weight-bold" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Idioma
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                      <a class="dropdown-item" href="#">Inglés</a>
-                                      <div class="dropdown-divider"></div>
-                                      <a class="dropdown-item" href="#">Español</a>
-                                    </div>
-                                </li>
-
+                            <ul class="list-unstyled topbar-right-menu float-right mb-0">                            
                                 <li>
                                     <!-- Notification -->
                                     <div class="notification-box">
@@ -93,13 +115,13 @@
                                     <!-- End Notification bar -->
                                 </li>                                
 
-                                <!--li class="hide-phone">
+                                <li class="hide-phone">
                                     <form class="app-search">
                                         <input type="text" placeholder="Search..."
                                                class="form-control">
                                         <button type="submit"><i class="fa fa-search"></i></button>
                                     </form>
-                                </li-->
+                                </li>
 
                             </ul>
                         </nav>
@@ -140,22 +162,31 @@
                     <div id="sidebar-menu">
                         <ul>
                         	<li class="text-muted menu-title">Navegación</li>                                                    
+                            @can('viewAny', 'App\Models\User')                                
+                                <li>
+                                    <a href="#" class="waves-effect"><i class="mdi mdi-account"></i><span>Usuarios </span></a>
+                                </li>
+                            @endcan                            
+                            @if (user()->can('viewAny', 'App\Models\Role') || user()->can('viewAny', 'App\Models\Permission'))                                
+                                <li class="has_sub">                                
+                                    <a href="javascript:void(0);" class="waves-effect bg-blackpanel"><i class="dripicons-gear"></i><span>Configuración </span> <span class="dripicons-chevron-right"></span></a>
+                                    <ul class="list-unstyled">                                    
+                                        @can('viewAny', 'App\Models\Role')                                        
+                                            <li>
+                                                <a href="{{ route('admin.configuration.roles.index') }}" class="waves-effect"> <span> Roles </span> </a>
+                                            </li>
+                                        @endcan
+                                        @can('viewAny', 'App\Models\Permission')                                        
+                                            <li>
+                                                <a href="{{ route('admin.configuration.permissions.index') }}" class="waves-effect"> <span> Permisos </span> </a>
+                                            </li>
+                                        @endcan
+                                    </ul>
+                                </li>
+                            @endif
                             <li>
-                                <a href="#" class="waves-effect"><i class="mdi mdi-account"></i><span>Usuarios </span></a>
+                                <a href="{{ route('auth.logout',['confirm' => true]) }}" class="waves-effect"><i class="dripicons-exit"></i><span>Cerrar sesión </span></a>
                             </li>
-                            <li class="has_sub">
-                                
-                                <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-gear"></i><span>Configuración </span> <span class="dripicons-chevron-right"></span></a>
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="#" class="waves-effect"> <span> Opción 1 </span> </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="waves-effect"> <span> Opción 2 </span> </a>
-                                    </li>
-                                </ul>
-                            </li>
-
                         </ul>
                         <div class="clearfix"></div>
                     </div>
@@ -299,18 +330,19 @@
 
         <!-- SweetAlert -->
         <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.9/dist/sweetalert2.all.min.js"></script>
-        <!-- Axios -->
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <!-- Toastr -->
-        <script defer src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>        
+        <script defer src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>
+        
         <!-- App js -->
         <script src="{{ asset('vendor/adminto/js/jquery.core.js') }}"></script>
-        <script src="{{ asset('vendor/adminto/js/jquery.app.js') }}"></script>        
+        <script src="{{ asset('vendor/adminto/js/jquery.app.js') }}"></script>
+
+        <!-- Axios -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>        
         <!-- Develper global scripts -->
         <script defer src="{{ asset('vendor/laravel-starter/js/global/global.js') }}"></script>
         <script defer src="{{ asset('vendor/laravel-starter/js/global/sweet-alert2.js') }}"></script>
         <script defer src="{{ asset('vendor/laravel-starter/js/global/toastr-config.js') }}"></script>
-
         @livewireScripts
         @stack('scripts')
     </body>

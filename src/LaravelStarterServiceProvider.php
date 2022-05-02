@@ -1,4 +1,5 @@
 <?php
+
 namespace BlackSpot\Starter;
 
 use BlackSpot\Starter\BladeComponents\{
@@ -35,50 +36,48 @@ class LaravelStarterServiceProvider extends ServiceProvider
      * @return void
      */
     public function register()
-    {  
-        
+    {
     }
-    
+
     /**
      * Bootstrap services.
      *
      * @return void
      */
     public function boot()
-    {        
+    {
         $this->registerMacros();
         $this->registerViews();
         $this->registerBladeComponents();
         $this->registerPublishables();
         $this->registerCommands();
         $this->registerLivewireComponents();
-
     }
 
     protected function registerViews()
     {
-        $this->loadViewsFrom(__DIR__.'/views','laravel-starter');
+        $this->loadViewsFrom(__DIR__ . '/views', 'laravel-starter');
     }
 
     protected function registerMacros()
     {
-        Str::macro('firstWhereStrpos', function($search, $subject, &$path = null){
-            if (($index = strpos($subject,$search)) !== false) {
-                $path = substr($subject,$index + 1, strlen($subject));
-                return substr($subject,0,$index);
+        Str::macro('firstWhereStrpos', function ($search, $subject, &$path = null) {
+            if (($index = strpos($subject, $search)) !== false) {
+                $path = substr($subject, $index + 1, strlen($subject));
+                return substr($subject, 0, $index);
             }
             return $subject;
         });
 
-        Str::macro('lastWhereStrpos', function($search, $subject, &$path = null){            
-            if (($index = strrpos($subject,$search)) !== false) {
+        Str::macro('lastWhereStrpos', function ($search, $subject, &$path = null) {
+            if (($index = strrpos($subject, $search)) !== false) {
                 $path = substr($subject, 0, $index);
-                return substr($subject,$index + 1, strlen($subject));
+                return substr($subject, $index + 1, strlen($subject));
             }
             return $subject;
         });
 
-        Str::macro('randomLetters',function($length = 16){
+        Str::macro('randomLetters', function ($length = 16) {
             $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $charactersLength = strlen($characters);
             $randomString = '';
@@ -90,28 +89,28 @@ class LaravelStarterServiceProvider extends ServiceProvider
         });
         Arr::macro('every', function ($array, $callback) {
             foreach ($array as $key => $value) {
-                if (! $callback($value, $key)) return false;
-            }        
+                if (!$callback($value, $key)) return false;
+            }
             return true;
         });
-        Arr::macro('some', function ($array, $callback) { 
-            foreach ($array as $key => $value) { 
-                if ($callback($value, $key)) return true; 
-            } 
-            return false; 
+        Arr::macro('some', function ($array, $callback) {
+            foreach ($array as $key => $value) {
+                if ($callback($value, $key)) return true;
+            }
+            return false;
         });
 
         DB::query()->macro('firstOrFail', function () {
             if ($record = $this->first()) {
                 return $record;
             }
-            abort(404,'Not found!');
+            abort(404, 'Not found!');
         });
     }
 
     protected function registerBladeComponents()
     {
-        $this->loadViewComponentsAs('',[
+        $this->loadViewComponentsAs('', [
             SimpleButton::class,
             //Forms
             InlineInput::class,
@@ -138,81 +137,86 @@ class LaravelStarterServiceProvider extends ServiceProvider
     protected function registerPublishables()
     {
 
-        /**
-         * Assets js,css,img | lstarter | lstarter:assets
-         */
-        $this->publishesToGroups([            
-            __DIR__.'/../adminto' => public_path('vendor/adminto'),
-            __DIR__.'/../laravel-starter' => public_path('vendor/laravel-starter'),
-            __DIR__.'/../toastr' => public_path('vendor/toastr'),
-            __DIR__.'/../storage/files-manager' => storage_path('app/files-manager'),
-        ], ['lstarter', 'lstarter:assets']);
-        
-        /**
-         * Configuration files | lstarter | lstarter:config
-         * And the preview files
-         */
         $this->publishesToGroups([
-            __DIR__.'/../config/filesmanager.php' => base_path('config/filesmanager.php'),
-            __DIR__.'/../config/laravel-starter.php' => base_path('config/lstarter.php'),
-            __DIR__.'/Livewire/FilesManager/bootstrap-layout.blade.php' => resource_path('views/livewire/addons/files-manager/bootstrap-layout.blade.php'),
-        ], ['lstarter', 'lstarter:config']);
-        
-        /**
-         * Views | lstarter:views-structure | lstarter:layout-adminto-bootstrap4
-         */
 
-        $this->publishes([        
-            __DIR__.'/views/structure' => resource_path('views/')
-        ],['lstarter','lstarter:views-structure']);
+            /***
+             * Assets (js,css,img, ...)
+             */
+            __DIR__ . '/../adminto'               => public_path('vendor/adminto'),
+            __DIR__ . '/../laravel-starter'       => public_path('vendor/laravel-starter'),
+            __DIR__ . '/../toastr'                => public_path('vendor/toastr'),
+            __DIR__ . '/../storage/files-manager' => storage_path('app/files-manager'),
 
-        $this->publishes([                       
-            __DIR__.'/views/adminto-bootstrap4/layouts' => resource_path('views/app/layouts/'),
-            __DIR__.'/views/adminto-bootstrap4/login.blade.php' => resource_path('views/app/auth/login.blade.php')
-        ],['lstarter','lstarter:adminto-bootstrap4']);
+            /**
+             * Views structure
+             */
+            __DIR__ . '/views/structure' => resource_path('views/'),
 
-        $this->publishes([        
-            __DIR__.'/views/components' => resource_path('views/components/laravel-starter-themes/')
-        ],['lstarter','lstarter:components']);
+            /**
+             * Configs
+             */
+            __DIR__ . '/../config/filesmanager.php'                       => base_path('config/filesmanager.php'),
+            __DIR__ . '/../config/laravel-starter.php'                    => base_path('config/laravel-starter.php'),
+            __DIR__ . '/Livewire/FilesManager/bootstrap-layout.blade.php' => class_exists('Livewire\Livewire') ? resource_path('views/livewire/addons/files-manager/bootstrap-layout.blade.php') : '',
 
-        /**
-         * database | lstarter:database
-         */
-        $this->publishes([        
-            __DIR__.'/../database/migrations' => database_path('migrations'),
-            __DIR__.'/../database/seeders'    => database_path('seeders'),
-            __DIR__.'/../database/models'    => base_path('app/Models'),
-        ],['lstarter','lstarter:database']);
+            /**
+             * Routes
+             */
+            __DIR__ . '/../routes/defaults.php' => base_path('routes/web.php'),
 
+        ], ['laravel-starter', 'laravel-starter:essentials']);
 
         /**
-         * Login | lstarter | lstarter:Login
+         * Auth controller, views and routes
          */
-        $this->publishesToGroups([            
-            __DIR__.'/Login' => app_path('Http/Controllers/Auth/')
-        ], ['lstarter', 'lstarter:login']);
+        $this->publishes([
+            __DIR__ . '/Auth/LoginController.php' => app_path('Http/Controllers/Auth/LoginController.php'),
+            __DIR__ . '/../routes/auth.php'       => base_path('routes/web.php'),
+        ], ['laravel-starter', 'laravel-starter:auth']);
+
+        /**
+         * Adminto bootstrap 4 them
+         */
+        $this->publishes([
+            __DIR__ . '/views/adminto-bootstrap4/layouts'         => resource_path('views/app/layouts/'),
+            __DIR__ . '/views/adminto-bootstrap4/login.blade.php' => resource_path('views/app/auth/login.blade.php'),
+        ], ['laravel-starter', 'laravel-starter:adminto-bootstrap-4-theme']);
+
+        /**
+         * Blade components
+         */
+        $this->publishes([
+            __DIR__ . '/views/components' => resource_path('views/components/laravel-starter-themes/')
+        ], ['laravel-starter', 'laravel-starter:blade-components']);
+
+        /**
+         * Database Models, Migrations and Seeders
+         */
+        $this->publishes([
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
+            __DIR__ . '/../database/seeders'    => database_path('seeders'),
+            __DIR__ . '/../database/models'     => base_path('app/Models'),
+        ], ['laravel-starter', 'laravel-starter:database']);        
     }
 
 
     protected function registerCommands()
     {
-        if (! $this->app->runningInConsole()) return;
+        if (!$this->app->runningInConsole()) return;
 
-        $this->commands([            
+        $this->commands([
             PublishCommand::class,  // lstarter:publish,
             MakeViewCommand::class // lstarer:make-view
         ]);
-
     }
 
     public function registerLivewireComponents()
     {
         if ($this->app->runningInConsole()) return;
 
-        if (class_exists('Livewire\Livewire')) {            
+        if (class_exists('Livewire\Livewire')) {
             Livewire::component('files-manager-view-file', PreviewFile::class);
         }
-
     }
 
     protected function publishesToGroups(array $paths, $groups = null)
