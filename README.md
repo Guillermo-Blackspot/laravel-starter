@@ -29,6 +29,7 @@ Tambien es de mucha ayuda para el crecimiento acelerado de los proyectos con Lar
 		- `--theme  -t(alias)` Esta opción indica el template del cual se tomaran las vistas que se creen. Por defecto es "adminto-bootstrap-4"
 		- `--for-empty-project` Esta opción indica que todas las anteriores opciones serán ejecutadas ya que se esta empezando un proyecto nuevo
 
+- 3 .- Seguir los pasos del archivo config/filesmanager.php para configurar el administrador de archivos
 
 
 

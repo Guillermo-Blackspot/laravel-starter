@@ -19,6 +19,8 @@ class PublishCommand extends Command
 
     public function handle()
     {
+        $this->publishAdmintoBootstrap4Theme();
+
         if ($this->option('blade-components')) {
             $this->publishBladeComponents();
         } elseif ($this->option('database')) {
@@ -27,16 +29,22 @@ class PublishCommand extends Command
             $this->publishAuthFiles();
         } else if ($this->option('essentials')) {
             $this->publishEssentials();
+        }elseif ($this->option('views-structure')) {
+            $this->publishViewsStructure();
         }else if ($this->option('for-empty-project')) {
             $this->publishEssentials();
             $this->publishBladeComponents();
             $this->publishDatabase();
             $this->publishAuthFiles();
+            $this->publishViewsStructure();
         } else{
             $this->info('No --option found');
-        }
+        }   
+    }
 
-        $this->publishAdmintoBootstrap4Theme();
+    public function publishViewsStructure()
+    {
+        $this->call('vendor:publish', ['--tag' => 'laravel-starter:views-structure', '--force' => true]);
     }
 
     public function publishEssentials()
