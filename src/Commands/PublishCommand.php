@@ -21,15 +21,15 @@ class PublishCommand extends Command
     {
         $this->publishAdmintoBootstrap4Theme();
 
-        if ($this->option('blade-components')) {
+        if ($this->option('blade-components') || $this->option('bc')) {
             $this->publishBladeComponents();
-        } elseif ($this->option('database')) {
+        } elseif ($this->option('database') || $this->option('db')) {
             $this->publishDatabase();
         }elseif ($this->option('auth')) {
             $this->publishAuthFiles();
         } else if ($this->option('essentials')) {
             $this->publishEssentials();
-        }elseif ($this->option('views-structure')) {
+        }elseif ($this->option('views-structure') || $this->option('vs')) {
             $this->publishViewsStructure();
         }else if ($this->option('for-empty-project')) {
             $this->publishEssentials();
