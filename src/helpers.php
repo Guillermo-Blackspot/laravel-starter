@@ -53,7 +53,7 @@ function get_icon_url(string $link){
         return "https://www.google.com/s2/favicons?domain=" . $link;
     }
   }
-  return asset('/img/favicon.ico');
+  return asset('/utils/images/favicon.ico');
 }
 
 
@@ -67,7 +67,7 @@ function parse_money($quantity, $decimals = 2, $sepDecimals = '.', $sepThousands
 {
   $quantity = trim($quantity);
 
-  if ($quantity == 0 || $quantity == null || $quantity == '') {
+  if ($quantity == 0 || $quantity < 0 || $quantity == null || $quantity == '') {
     return 0;
   }
 
@@ -150,7 +150,8 @@ function translate_month($monthPosition, $lang = 'es', $join = '')
 }
 
 if (!function_exists('phone_number_format')) {  
-  function phone_number_format($number, $separator = '-') {
+  function phone_number_format($number, $separator = '-') 
+  {
     // Allow only Digits, remove all other characters.
     $number = preg_replace("/[^\d]/","",$number);
    
@@ -163,5 +164,12 @@ if (!function_exists('phone_number_format')) {
     }
     
     return $number;
+  }
+}
+
+if (!function_exists('pretty_date')) {
+  function pretty_date($date)
+  {
+      return date('d', strtotime($date)) . ' ' . translate_month(date('m', strtotime($date))) . ' ' . date('Y', strtotime($date));
   }
 }
