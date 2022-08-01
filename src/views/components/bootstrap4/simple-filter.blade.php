@@ -9,8 +9,7 @@
                  style="cursor: pointer" 
                  wire:ignore 
                  wire:click.prevent="doSearch(1, $event.target.closest('.parent').querySelector('.input-search-query').value, '{{ $wireSearch }}')" 
-                 data-toggle="tooltip" 
-                 data-original-title="Click para buscar" 
+                 title="Click para buscar" 
                  onclick="javascript:toastr.info('Buscando...')">
                 <span class="input-group-text simple-filter-colors" id="{{ $randomId1 }}"><i class="fa-lg ti-search"></i></span>
             </div>
@@ -28,9 +27,7 @@
             
             @if ($inSearch)
                 <div class="input-group-prepend" style="cursor: pointer" wire:ignore wire:click.prevent="doSearch(0)" onclick="javascript:toastr.info('Deshaciendo búsqueda...')">
-                    <span class="input-group-text bg-transparent text-danger b-0 pl-0 font-weight-bold" 
-                          data-toggle="tooltip" 
-                          data-original-title="Click para deshacer busqueda">
+                    <span class="input-group-text bg-transparent text-danger b-0 pl-0 font-weight-bold" title="Click para deshacer busqueda">
                           <i class="fa-lg dripicons-cross"></i> Deshacer
                     </span>
                 </div>
