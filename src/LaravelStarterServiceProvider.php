@@ -57,6 +57,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
     protected function registerViews()
     {
         $this->loadViewsFrom(__DIR__ . '/views', 'laravel-starter');
+        $this->loadViewsFrom(storage_path('/app/files-manager'), 'files_manager');
     }
 
     protected function registerMacros()
