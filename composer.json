@@ -28,6 +28,7 @@
     "require": {
         "php": ">=7.3",
         "mmo-and-friends/estados-municipios-mexico": "^1.0",
-        "guillermo-rod/laravel-blade-ui": "dev-main"
+        "guillermo-rod/laravel-blade-ui": "dev-main",
+        "cviebrock/eloquent-sluggable": "^8.0"
     }
 }

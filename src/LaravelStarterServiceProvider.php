@@ -114,7 +114,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
 
     protected function registerBladeComponents()
     {        
-        $this->loadViewComponentsAs('starter', [
+        $this->loadViewComponentsAs(null,[
             //Forms
             InlineInput::class,
             InlineSelect::class,
@@ -138,12 +138,15 @@ class LaravelStarterServiceProvider extends ServiceProvider
     protected function registerPublishables()
     {
 
+        $this->publishes([
+            __DIR__ . '/../dist/laravel-starter' => public_path('vendor/laravel-starter'),
+        ],[$this->getPackageName('-assets')]);
+
         $this->publishesToGroups([
 
             // Default css, images, js and files for correct functionality
             //
             //
-            __DIR__ . '/../dist/laravel-starter' => public_path('vendor/laravel-starter'),
             __DIR__ . '/../dist/files-manager'   => storage_path('app/files-manager'),                        
             
 

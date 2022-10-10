@@ -254,8 +254,8 @@
                 <div class="content">
                     <div class="container-fluid">
                         <div>
-                            <x-alert flash="success" class="alert-success" />
-                            <x-alert flash="error" class="alert-danger" />
+                            <x-alert flash="success" class="alert-success alert-auto-fadeout" />
+                            <x-alert flash="error" class="alert-danger alert-auto-fadeout" />
                         </div>
                         
                         @yield('content')
