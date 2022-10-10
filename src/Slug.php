@@ -49,7 +49,7 @@ class Slug
         }
 
         if (empty($modelInstance->{$attr}) || $modelInstance->{$attr} == null) {
-            session()->flash('slug-error',"Para usar este método el campo no debe estar vacio.");
+            //session()->flash('slug-error',"Para usar este método el campo no debe estar vacio.");
             return $this->createRandomSlug(27, $maybeOwner);       
         }else{
             return $this->generateSlugProspect($modelInstance->{$attr}, $maybeOwner);
@@ -110,7 +110,7 @@ class Slug
     {   
         if ($this->slugProspectExists($fromString, $maybeOwner)) {
             $diffStr = Str::slug(Str::random(5));
-            session()->flash('slug-info',"El slug ingresado ya existe, se agrego \"{$diffStr}\" para hacerlo único");
+            //session()->flash('slug-info',"El slug ingresado ya existe, se agrego \"{$diffStr}\" para hacerlo único");
             return $this->generateSlugProspect($fromString.'-'.$diffStr, $maybeOwner);
         } 
         return Str::slug($fromString);

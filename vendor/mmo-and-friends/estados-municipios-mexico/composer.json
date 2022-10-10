@@ -1,0 +1,21 @@
+{
+    "name": "mmo-and-friends/estados-municipios-mexico",
+    "description": "Un paquete de php y javascript de los estados y municipios de mexico, soporta el comando mexico:publish para laravel",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "MmoAndFriends\\Mexico\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Guillermo Rodriguez",
+            "email": "guillermo.rod.dev@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4|^8.0"
+    }
+}

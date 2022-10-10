@@ -11,8 +11,6 @@ use Livewire\TemporaryUploadedFile;
 
 trait FilesManager
 {
-  //public $attachedFiles = [];
-
 
   /**
    * Delete a directory from storage folder
@@ -74,29 +72,6 @@ trait FilesManager
 
     return $this->getDiskInstance()->delete($fileNames) ?? true;
   }
-
-  public function moveFile(string $requestAndAttributeName, string $path, $diskReplacers, string $formRole = 'create')
-  {
-
-    /*if ($formRole == 'edit' && $this->{$requestAndAttributeName} !== null) {
-        \Storage::delete($this->getFilesFolder($path, $diskReplacers).'/'. $this->{$requestAndAttributeName});
-    }
-    return basename(request()->file($requestAndAttributeName)->store(
-      $this->getFilesFolder($path, $diskReplacers)
-    ));
-    */
-  }
-
-
-  /**
-   * Copy an file
-   * 
-   * @return bool
-   */
-  /*public function copyFile(string $origin, string $destination)
-  {
-    return Storage::copy($origin, $destination.'/'.basename($origin));
-  }*/
 
   /**
    * Move a request file
@@ -286,25 +261,6 @@ trait FilesManager
 
     return trim($path);
   }
-
-
-
-  /**
-   * Validate if file exists in storage
-   * 
-   * @param string $folder
-   * @param array $pathReplacers
-   * @param string $fileName
-   * @return bool
-   */
-  /*
-  public function fileExists(string $folder, array $pathReplacers = [], string $fileName)
-  {
-    return Storage::exists($this->getFilesFolder($folder,$pathReplacers), $fileName);
-  }
-  */
-
-
 
   /**
    * Preview Files

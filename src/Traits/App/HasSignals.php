@@ -32,16 +32,21 @@ trait HasSignals
      * @param array|null $args
      * @return self
      */
-    public function callSignal($step, $args = [])
+    public function callSignal($signal, $args = [])
     {
-        if (isset($this->signals[$step]) == false) {
+        if (isset($this->signals[$signal]) == false) {
             return 0;
         }
 
-        foreach ($this->signals[$step] as $callback) {
+        foreach ($this->signals[$signal] as $callback) {
             $callback(...$args);
         }
 
         return $this;
+    }
+
+    public function removeSignal($signal)
+    {
+        unset($this->signals[$signal]);
     }
 }

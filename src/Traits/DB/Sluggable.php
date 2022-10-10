@@ -27,7 +27,7 @@ trait Sluggable
      */
     public function slugProspectExists($prospect)
     {
-        $query = DB::table($this->table)
+        $query = DB::table($this->getTable())
                     ->where($this->getSlugColumn(), $prospect)
                     ->where('id', '!=', $this->id);
 
@@ -48,7 +48,7 @@ trait Sluggable
     {   
         if ($this->slugProspectExists($fromString)) {
             $diffStr = Str::slug(Str::random(5));
-            session()->flash('slug-info',"El slug ingresado ya existe, se agrego \"{$diffStr}\" para hacerlo único");
+            //session()->flash('slug-info',"El slug ingresado ya existe, se agrego \"{$diffStr}\" para hacerlo único");
             return $this->generateSlugProspect($fromString.'-'.$diffStr);
         } 
 
@@ -63,28 +63,7 @@ trait Sluggable
      * @return string
      */
     public function createSlug($attr)
-    {
-        // $orAttributes = [];
-
-        // if (strpos($attr,'|') !== false) {
-        //     $orAttributes = explode('|', $attr);
-        // }else{
-        //     $orAttributes = [$attr];
-        // }
-
-        // $attributeToUse = null;
-        
-        // if (!empty($orAttributes)) {
-        //     foreach ($orAttributes as $or) {                
-        //         if (property_exists($this,$or) == false) {
-        //             throw new \Exception("{$this->table}:{$or} not exists", 1);
-        //         }else{
-        //             $attributeToUse = thi
-        //         }
-        //     }
-        // }
-
-        
+    {        
         if (!isset($this->attributes[$attr]) && !isset($this->original[$attr]) && !property_exists($this,$attr)) {
             throw new \Exception("{$this->table}:{$attr} not exists", 1);
         }

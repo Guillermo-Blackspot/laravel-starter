@@ -48,13 +48,11 @@ trait DynamicMediaConversions
 
                 $conversion = Conversion::create($conversionName)
                                     ->performOnCollections($collection);
-
-                foreach ($dynamicFunctions as $fn => $value) {
-                    if (is_array($value)) {
-                        $conversion = $conversion->{$fn}(...$value);
-                    }else{
-                        $conversion = $conversion->{$fn}($value);
-                    }
+             
+                foreach ($dynamicFunctions as $fn => $value) {                    
+                    $conversion = is_array($value)
+                                    ? $conversion->{$fn}(...$value)
+                                    : $conversion->{$fn}($value);
                 }
 
                 $this->mediaConversions[] = $conversion;

@@ -14,6 +14,8 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
+use BlackSpot\Starter\Validation\Rules\PhoneRule;
+use BlackSpot\Starter\Validation\Rules\UniqueEmailRule;
 
 class User extends Authenticatable implements HasMedia
 {
@@ -34,11 +36,7 @@ class User extends Authenticatable implements HasMedia
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -57,7 +55,7 @@ class User extends Authenticatable implements HasMedia
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'birthday_date' => 'date'
+        'date_of_birth' => 'date'
     ];
 
     /**
@@ -68,19 +66,71 @@ class User extends Authenticatable implements HasMedia
     public $timestamps = true;
 
     /**
+     * Helper functions
+     */
+    public function assignRoleIfExists($role, $guardName = 'web')
+    {
+        $role = Role::where('name', $role)->where('guard_name', $guardName)->value('id');
+
+        if ($role !== null) {
+            $this->assignRole($role);
+        }
+
+        return $role !== null;
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->can(Permission::SUPER_ADMIN_PERMISSION);    
+    }
+
+    public static function getDefaultValidationRules(&$merge = [], $userId)
+    {
+        $rules =  [            
+            'user.name'          => 'required',
+            'user.last_name'     => 'nullable',
+            'user.email'         => ['required', 'email', new UniqueEmailRule(User::class, 'email', $userId)],
+            'user.email_2'       => 'nullable|email',
+            'user.landline'      => ['nullable', new PhoneRule()],
+            'user.partner_code'  => ['nullable', function($attr, $value, $fail) use($userId){
+                if (self::where('partner_code', $value)->where('id','!=',$userId)->exists()) {
+                    return $fail('Este código de colaborador ya existe.');
+                }
+            }],
+            'user.photo'         => 'nullable',
+            'user.gender'        => 'nullable',
+            'user.accept_terms'  => 'nullable|in:0,1',
+            'user.is_active'     => 'nullable|in:0,1',
+            'user.date_of_birth' => 'nullable|date',
+            'user.slug'          => 'nullable',
+            //'user.partner_code'  => 'nullable',
+            'user.password'      => 'nullable',         
+            //'selectedRoles'      => 'required',
+        ];
+
+        if (!empty($merge)) {
+            $rules = $merge = array_merge($merge, $rules);
+        }
+
+        return $rules;
+    }
+
+    /**
      *  Mutator functions
      */    
     public function getFullNameAttribute()
     {      
-        return $this->name.' '.$this->surname;
+        return $this->name.' '.$this->last_name;
     }
 
     public function getPhoneWithCodeAttribute()
-    {      
-        if (optional($this->cellphone_code)->dial_code != '' && optional($this->cellphone_code)->dial_code != null) {        
-            return '('.optional($this->cellphone_code)->dial_code.') '.$this->cellphone;
-        }
-        return optional($this->cellphone_code)->dial_code.' '.$this->cellphone;
+    {   
+        $dialCode = null;
+
+        if ($this->cellphone_code != null) {
+            $dialCode = '('.$this->cellphone_code->dial_code.') ';
+        }   
+        return $dialCode . $this->cellphone;
     }
 
     public function getInlineRolesAttribute()
@@ -103,23 +153,54 @@ class User extends Authenticatable implements HasMedia
         if ($this->photo == null) {
             return $this->getFileAsset('defaults.avatars.user',[], false);
         }
+
         if (strpos($this->photo,'http') !== false) {
             return $this->photo;
         }
-        return $this->getFileAsset('users',['{user}' => $this->id],true) . '/' . $this->photo;
-    }
+
+        return $this->getFileAsset('users', ['{user}' => $this->id], true) . '/' . $this->photo;
+    }    
     
-    public function cellphone_code()
+    /**
+     * Eloquent scopes
+     */
+
+     /**
+     * Get the users that can sell 
+     */
+    public function scopeSellerUsers($query)
     {
-        return $this->belongsTo(Country::class, 'cellphone_code_id');
+        return $query->where(function($query) {
+            $query->whereHas('roles.permissions',function($query) {
+                $query->where('name','be-a-seller');
+            })
+            ->orWhereHas('roles.permissions', function($query){
+                $query->where('name','im-a-super-admin-and-i-have-full-access');
+            });
+        });
+    }   
+
+    public function scopePartnerUsers($query)
+    {
+        return $query->whereNotNull('partner_code')->whereNotNull('password');                
     }
-    
+
     /**
      *  Relations
      */
     public function media_photo()
     {
         return $this->media()->where('collection_name','photo');
+    }
+
+    public function cellphone_code()
+    {
+        return $this->belongsTo(Country::class, 'cellphone_code_id');
+    }
+
+    public function created_by_user()
+    {
+        return $this->belongsTo(User::class, 'created_by_user_id');
     }
 
     public function registerMediaCollections(): void

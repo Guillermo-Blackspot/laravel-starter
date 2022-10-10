@@ -1,0 +1,27 @@
+.tooltip-grey > .tooltip-inner{
+    background: #ebeff2 !important;
+    color: #000 !important;
+    margin: 2px;
+    border-radius: 8px;
+    padding: 10px;
+    opacity: 1 !important;
+    /* border: 1px solid rgba(43,141,186,0.75);  */
+}  
+.tooltip-grey.in{opacity:1!important;}        
+.tooltip-grey.show {opacity: 1;}
+.tooltip-grey.bs-tooltip-right .arrow:before {
+    border-right-color: #ebeff2 !important;
+    margin-left: 0px;
+}
+.tooltip-grey.bs-tooltip-left .arrow:before {
+    border-right-color: #ebeff2 !important;
+    margin-right: 0px;
+}
+.tooltip-grey.bs-tooltip-bottom .arrow:before {
+    border-right-color: #ebeff2 !important;
+    margin-top: 0px;
+}
+.tooltip-grey.bs-tooltip-top .arrow:before {
+    border-right-color: #ebeff2 !important;
+    margin-bottom: 0px;
+}

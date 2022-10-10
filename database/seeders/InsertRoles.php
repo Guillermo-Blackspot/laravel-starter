@@ -17,8 +17,7 @@ class InsertRoles extends Seeder
         foreach ( 
             [
                 ['id' => 1, 'name' => 'super admin'],
-                ['id' => 2, 'name' => 'admin'],
-                ['id' => 3, 'name' => 'customer'],
+                ['id' => 2, 'name' => 'customer'],
             ]  
             as $role
         ) {

@@ -45,15 +45,15 @@ function get_youtube_video_id($youtubeUrl)
  * @param string $link
  * @return string
  */
-function get_icon_url(string $link){
+function get_icon_url(string $link, $default = null){
   if($link != ''){
     $link = preg_replace('/^https?:\\/\\//', '', $link);
     $link = explode('/', $link)[0];
     if ($link != '') {
-        return "https://www.google.com/s2/favicons?domain=" . $link;
+      return "https://www.google.com/s2/favicons?domain=" . $link;
     }
   }
-  return asset('/utils/images/favicon.ico');
+  return $default ?? asset('/utils/images/favicon.ico');
 }
 
 
@@ -79,21 +79,30 @@ function parse_money($quantity, $decimals = 2, $sepDecimals = '.', $sepThousands
   );
 }
 
+if (!function_exists('parse_number')) {
+  function parse_number($quantity, $decimals = 2, $sepDecimals = '.', $sepThousands = ',')
+  {
+    return parse_money($quantity, $decimals, $sepDecimals, $sepThousands);
+  }
+}
+
 /**
  * Converts an input into array 
  * @param mixed $mixed
  * @return array
  */
-function to_array($mixed)
-{
-  if (is_array($mixed)) {
-    return $mixed;
-  }elseif ($mixed instanceof \ArrayAccess) {
-    return $mixed->toArray();
-  }elseif (is_object($mixed)) {
-    return (array)$mixed;
-  }elseif (is_string($mixed)) {
-    return json_decode($mixed, true);
+if (!function_exists('to_array')) {  
+  function to_array($mixed)
+  {
+    if (is_array($mixed)) {
+      return $mixed;
+    }elseif ($mixed instanceof \ArrayAccess) {
+      return $mixed->toArray();
+    }elseif (is_object($mixed)) {
+      return (array)$mixed;
+    }elseif (is_string($mixed)) {
+      return json_decode($mixed, true);
+    }
   }
 }
 

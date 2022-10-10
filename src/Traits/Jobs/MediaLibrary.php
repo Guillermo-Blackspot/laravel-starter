@@ -7,22 +7,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 trait MediaLibrary
 {
-
-    private function mediaLibraryRequirements()
-    {
-        if (!method_exists($this, 'isCreate')) {
-            throw new Exception("When use ".__CLASS__." you need import the ValidateActions trait", 1);
-        }
-
-        if (!property_exists($this, 'oldFiles')) {
-            throw new Exception("When use ".__CLASS__." you need create the attribute \"\$oldFiles\"", 1);
-        }
-
-        if (!method_exists($this, 'getBasePath')) {
-            throw new Exception("When use ".__CLASS__." you need import the \"FilesManager\" trait", 1);
-        }
-    }
-
+    use ValidateActions;
+    
     /**
      * Create or update or delete the media collection of the model
      * 
@@ -32,38 +18,43 @@ trait MediaLibrary
      */
     public function createOrUpdateOrDeleteMediaCollection($model, $settings)
     {
-        $this->mediaLibraryRequirements();
+        $attributeName  = $settings['attribute'];
+        $attributeValue = $model->{$attributeName};
 
-        $attr = $settings['attribute'];
-    
-        if ($this->isCreate() && $model->{$attr} != null) {
+        // ON CREATE ACTIONS
 
-            // If is in create mode and the model attribute != null
-
-            $this->createOrUpdateMediaFiles($model, $settings);
-
-        }elseif ($this->isUpdate()) {
-            
-            //If the model attribute is not null and the old files are news
-
-            if ($model->{$attr} != null && ($this->oldFiles[$settings['old_files_attribute']] != $model->{$attr})) {
-            
-                $this->createOrUpdateMediaFiles($model, $settings);
-
-            }else if($model->{$attr} == null){
-            
-                // If the is in update and the model attribute is null delete the media
-
-                $this->deleteMedia($model, $settings);
-            }else{                
-                $hasMedia = $model->media()->where('collection_name', $settings['collection'])->where('name', $settings['attribute'])->exists();
-                //Create in update time
-                if (!$hasMedia) {
-                    $this->createOrUpdateMediaFiles($model, $settings);                
-                }
-            }
-
+        // On create if model attribute value is not null, create his media
+        // Internally it'll make his conversions
+        if ($this->isCreate()) {
+            if ($attributeValue != null) return $this->createOrUpdateMediaFile($model, $settings); 
+            return ;
         }
+
+        // -----------------------------------------------------------------------------------------------
+        // ON UPDATE ACTIONS
+
+        // On update if model attribute value is null delete the media
+        // Internally it'll delete his folder
+        if ($attributeValue == null) return $this->deleteMedia($model, $settings);
+
+
+        // If the model attribute value is not null and there are news files
+        // Update them
+        if ($this->oldFiles[$settings['old_files_attribute']] != $attributeValue) {
+            return $this->createOrUpdateMediaFile($model, $settings);
+        }
+    
+        // At this point we need check if the model has a existing media with the collection name
+        // if not exists, make it
+        $hasMedia = $model->media()
+                        ->where('collection_name', $settings['collection'])
+                        ->where('name', $settings['attribute'])
+                        ->exists();
+
+        if (!$hasMedia) return $this->createOrUpdateMediaFile($model, $settings);
+        
+        // Unknown changes
+        return;
     }
 
     /**
@@ -77,10 +68,10 @@ trait MediaLibrary
     {   
         $mediaId = $model->media()->where('collection_name', $settings['collection'])->where('name', $settings['attribute'])->select('id')->value('id');
     
-        if ($mediaId != null) {
-            Media::where('id', $mediaId)->delete();
-            Storage::disk(config('media-library.disk_name'))->deleteDirectory($mediaId);
-        }
+        if ($mediaId == null) return;
+
+        Media::where('id', $mediaId)->delete();
+        Storage::disk(config('media-library.disk_name'))->deleteDirectory($mediaId);
     }
 
     /** 
@@ -90,11 +81,9 @@ trait MediaLibrary
      * @param array $settings
      * @return void
     */
-    public function createOrUpdateMediaFiles($model, $settings)
+    public function createOrUpdateMediaFile($model, $settings)
     {
-        if ($this->isUpdate()) {
-            $this->deleteMedia($model, $settings);
-        }
+        if ($this->isUpdate()) $this->deleteMedia($model, $settings);
 
         $this->filesManagerAddMedia($model, [$settings['path'], $settings['path_replacers']], $settings['attribute'], $settings['collection']);
     }
@@ -103,36 +92,31 @@ trait MediaLibrary
      * Copy file to spatie media-library
      * 
      */
-    public function filesManagerAddMedia(object $modelInstance ,array $getFilesFolderArgs = [], string $modelAttribute, string $toCollection)
+    public function filesManagerAddMedia(object $model ,array $filesFolderArguments = [], string $modelAttribute, string $toCollection)
     {
-        if (strpos($modelInstance->{$modelAttribute}, 'http') !== false) {
-            
-            if (env('APP_ENV') == 'local') {
-                if (app()->runningInConsole()) {
-                    dd('is an external file');
-                }
-            }
 
+        // Is an external file
+        if (strpos($model->{$modelAttribute}, 'http') !== false) {            
+            if (env('APP_ENV') == 'local' && app()->runningInConsole()) dd('is an external file');            
             return 0;
         }
 
-        if (empty($getFilesFolderArgs)) {
-            throw new Exception(__FUNCTION__.' getFilesFolderArgs is empty', 1);      
-        }
+        throw_if(empty($filesFolderArguments), __FUNCTION__.' filesFolderArguments is empty');
 
-        array_push($getFilesFolderArgs,$modelInstance->{$modelAttribute});
 
-        $fileToCopy = $this->getBasePath(...$getFilesFolderArgs);
+        array_push($filesFolderArguments,$model->{$modelAttribute});
+
+        $fileToCopy = $this->getBasePath(...$filesFolderArguments);
 
         if (file_exists($fileToCopy)) {            
-            $modelInstance
+            $model
                 ->addMedia($fileToCopy)
                 ->withCustomProperties(
                     [
                         'original_file_manager_path' => [
-                            'path'            => $getFilesFolderArgs[0],
-                            'path_replacers'  => $getFilesFolderArgs[1],
-                            'filename'        => $getFilesFolderArgs[2],
+                            'path'            => $filesFolderArguments[0],
+                            'path_replacers'  => $filesFolderArguments[1],
+                            'filename'        => $filesFolderArguments[2],
                             'model_attribute' => $modelAttribute
                         ]
                     ]
@@ -140,12 +124,11 @@ trait MediaLibrary
                 ->preservingOriginal()
                 ->usingName($modelAttribute)
                 ->toMediaCollection($toCollection);
-        }else{
-            if (env('APP_ENV') == 'local') {
-                if (app()->runningInConsole()) {
-                    dd('file doesn\'t exists '. $fileToCopy);
-                }
-            }
+
+            return;
         }
+        
+
+        if (env('APP_ENV') == 'local' && app()->runningInConsole()) dd('file doesn\'t exists '. $fileToCopy);
     }
 }

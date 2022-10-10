@@ -68,8 +68,9 @@ class SelectMultipleComponent extends Component
         'selectMultipleComponentPage' => ['except' => 1],
     ];
 
-
     protected $parentEventListener = 'setSelectedItems';
+
+    public $selectMode = 'multiple';
 
 
     public function mount()
@@ -100,7 +101,6 @@ class SelectMultipleComponent extends Component
 
         $this->scopeBuilder($query);
         
-
         if ($this->addItem) {
             $query->whereNotIn('id',array_keys($this->selectedItems));
         }else{
@@ -127,7 +127,7 @@ class SelectMultipleComponent extends Component
         if ($success) {      
             if ($this->formType == 'create') {
                 $this->resetInputFields();
-            }            
+            }
 
             $this->emitUp("{$this->listenerId}.freshRows");
         }
@@ -139,7 +139,7 @@ class SelectMultipleComponent extends Component
      * @param int $item
      * @return boolean
      */
-    public function isInSelectedItemsArray($item)
+    public function itemIsSelected($item)
     {
         return isset($this->selectedItems[$item]);
     }
@@ -148,7 +148,7 @@ class SelectMultipleComponent extends Component
     public function updatedSelectedItems($value, $key)
     {   
         if (($dotPosition = strpos($key, '.')) !== false) {
-            $key = substr($key,0,$dotPosition);
+            //$key = substr($key,0,$dotPosition);
             $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'array_value_was_modified');
         }
     }
@@ -161,22 +161,23 @@ class SelectMultipleComponent extends Component
      */
     public function addItem($item)
     {   
-        $addingItem = null;
-
-        if (method_exists($this, 'addingNewItem')) {            
-            $addingItem = $this->addingNewItem($item);
+        if ($this->selectMode == 'one' && count($this->selectedItems) > 0) {
+            return $this->toastError($this->getSelectOneMessage());
         }
 
-        if ($this->isInSelectedItemsArray($item) == false && ($addingItem || is_null($addingItem) )) {   
-            $this->selectedItems[$item] = $item;
-            if (method_exists($this, 'newItemAdded')) {
-                $this->newItemAdded($item);
-            }
-            $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'add');    
+        if ($this->itemIsSelected($item)) {
+            return ;
         }
+
+        $this->addingItem($item);
+
+        $this->selectedItems[$item] = $item;
+
+        $this->itemAdded($item, $this->selectedItems[$item]);
+
+        $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'add');    
 
     }
-
 
     /**
      * Remove item 
@@ -185,23 +186,35 @@ class SelectMultipleComponent extends Component
      */
     public function removeItem($item)
     {
-        $removingItem = null;
-        
-        if (method_exists($this, 'removingItem')) {            
-            $removingItem = $this->removingItem($item);
+        if (!$this->itemIsSelected($item)) {
+            return ;
         }
 
-        if ($this->isInSelectedItemsArray($item) && ($removingItem || is_null($removingItem))) {                            
-            $this->selectedItems = array_filter($this->selectedItems, function($selectedItem, $selectedId) use($item) {             
-                return $selectedId != $item;
-            },ARRAY_FILTER_USE_BOTH);
-            if (method_exists($this, 'itemRemoved')) {
-                $this->itemRemoved($item);
-            }
-            $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'remove');
-        }
+        $this->removingItem($item);
+
+        unset($this->selectedItems[$item]);
+
+        $this->itemRemoved($item);
+            
+        $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'remove');
+    }
+
+    protected function getSelectOneMessage()
+    {
+        return '¡Solo puedes seleccionar una opción!';
     }
     
+    protected function addingItem($itemKey)
+    {}
+
+    protected function itemAdded($itemKey, $data)
+    {}
+
+    protected function removingItem($itemKey)
+    {}
+
+    protected function itemRemoved($itemKey)
+    {}
 
     /**
      * Set the table content for: add items or show the aggregated items
@@ -217,6 +230,7 @@ class SelectMultipleComponent extends Component
         }else{
             $this->addItem = false;
         }
+
         $this->executeQuery = true;
 
         $this->emitUp($this->listenerId.'.freshParentComponent');

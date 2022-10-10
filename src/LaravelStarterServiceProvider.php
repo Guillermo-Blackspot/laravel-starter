@@ -4,25 +4,20 @@ namespace BlackSpot\Starter;
 
 use BlackSpot\Starter\BladeComponents\{
     AdvancedMultiSelect,
-    Alert,
-    SimpleButton,
     InlineInput,
     InlineSelect,
     InlineTextarea,
     InputFilter,
-    LinearInput,
-    LinearSelect,
-    LinearTextarea,
-    Loading,
-    SimpleModal,
     SimpleFilter,
-    Table
 };
+
+
 use BlackSpot\Starter\Commands\MakeViewCommand;
 use BlackSpot\Starter\Commands\PublishCommand;
 use BlackSpot\Starter\Livewire\FilesManager\PreviewFile;
 use Exception;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -30,6 +25,9 @@ use Livewire\Livewire;
 
 class LaravelStarterServiceProvider extends ServiceProvider
 {
+
+    public const PACKAGE_NAME = 'laravel-starter';
+
     /**
      * Register services.
      *
@@ -49,6 +47,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
         $this->registerMacros();
         $this->registerViews();
         $this->registerBladeComponents();
+        $this->registerBladeDirectives();
         $this->registerPublishables();
         $this->registerCommands();
         $this->registerLivewireComponents();
@@ -56,153 +55,176 @@ class LaravelStarterServiceProvider extends ServiceProvider
 
     protected function registerViews()
     {
-        $this->loadViewsFrom(__DIR__ . '/views', 'laravel-starter');
-        $this->loadViewsFrom(storage_path('/app/files-manager'), 'files_manager');
+        $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'views', self::PACKAGE_NAME);
+        $this->loadViewsFrom(storage_path('/app/files-manager'), 'files-manager');
     }
 
+    /**
+     * Str, Arr and DB macros
+     */
     protected function registerMacros()
     {
-        Str::macro('firstWhereStrpos', function ($search, $subject, &$path = null) {
+        Str::macro('firstWhereStrpos', function ($search, $subject) {
             if (($index = strpos($subject, $search)) !== false) {
-                $path = substr($subject, $index + 1, strlen($subject));
+                //$path = substr($subject, $index + 1, strlen($subject));
                 return substr($subject, 0, $index);
             }
             return $subject;
         });
 
-        Str::macro('lastWhereStrpos', function ($search, $subject, &$path = null) {
+        Str::macro('lastWhereStrpos', function ($search, $subject) {
             if (($index = strrpos($subject, $search)) !== false) {
-                $path = substr($subject, 0, $index);
+                //$path = substr($subject, 0, $index);
                 return substr($subject, $index + 1, strlen($subject));
             }
             return $subject;
         });
 
-        Str::macro('randomLetters', function ($length = 16) {
-            $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        Str::macro('randomLetters', function ($length = 23) {
+            $characters       = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $charactersLength = strlen($characters);
-            $randomString = '';
+            $randomString     = '';
+
             for ($i = 0; $i < $length; $i++) {
                 $randomString .= $characters[rand(0, $charactersLength - 1)];
             }
+
             return $randomString;
-            //return preg_replace('/^([0-9]* \w+ )?(.*)$/', '$2', Str::random($size));
         });
+
         Arr::macro('every', function ($array, $callback) {
             foreach ($array as $key => $value) {
-                if (!$callback($value, $key)) return false;
+                if (!$callback($value, $key, $array)) return false;
             }
             return true;
         });
+
         Arr::macro('some', function ($array, $callback) {
             foreach ($array as $key => $value) {
-                if ($callback($value, $key)) return true;
+                if ($callback($value, $key, $array)) return true;
             }
             return false;
         });
 
         DB::query()->macro('firstOrFail', function () {
-            if ($record = $this->first()) {
-                return $record;
-            }
+            if ($record = $this->first()) return $record;
             abort(404, 'Not found!');
         });
     }
 
     protected function registerBladeComponents()
-    {
-        $this->loadViewComponentsAs('', [
-            SimpleButton::class,
+    {        
+        $this->loadViewComponentsAs('starter', [
             //Forms
             InlineInput::class,
             InlineSelect::class,
             InlineTextarea::class,
-            LinearInput::class,
-            LinearSelect::class,
-            LinearTextarea::class,
             //Advanced Forms
             AdvancedMultiSelect::class,
-            //Modals
-            SimpleModal::class,
             //Tables and for tables
             SimpleFilter::class,
-            Table::class,
             InputFilter::class,
-            //Miscellaneous
-            Alert::class,
-            Loading::class
-        ]);
+        ]);        
     }
+    
 
+    protected function registerBladeDirectives()
+    {        
+        Blade::directive('jsUrlScript', [BladeDirectives::class, 'jsUrlScript']);
+        Blade::directive('dispatchBrowserEventsScript', [BladeDirectives::class, 'dispatchBrowserEventsScript']);
+        Blade::directive('starterScripts', [BladeDirectives::class, 'starterScripts']);
+    }
 
     protected function registerPublishables()
     {
 
         $this->publishesToGroups([
 
-            /***
-             * Assets (js,css,img, ...)
-             */
-            __DIR__ . '/../dist/adminto'               => public_path('vendor/adminto'),
-            __DIR__ . '/../dist/laravel-starter'       => public_path('vendor/laravel-starter'),
-            __DIR__ . '/../dist/toastr'                => public_path('vendor/toastr'),
-            __DIR__ . '/../dist/storage/files-manager' => storage_path('app/files-manager'),
+            // Default css, images, js and files for correct functionality
+            //
+            //
+            __DIR__ . '/../dist/laravel-starter' => public_path('vendor/laravel-starter'),
+            __DIR__ . '/../dist/files-manager'   => storage_path('app/files-manager'),                        
+            
 
-            /**
-             * Configs
-             */
+            // Default config files for correct functionality
+            //
+            //
             __DIR__ . '/../config/filesmanager.php'                       => base_path('config/filesmanager.php'),
             __DIR__ . '/../config/laravel-starter.php'                    => base_path('config/laravel-starter.php'),
             __DIR__ . '/Livewire/FilesManager/bootstrap-layout.blade.php' => class_exists('Livewire\Livewire') ? resource_path('views/livewire/addons/files-manager/bootstrap-layout.blade.php') : '',
+            
+            // Default tailwind css login
+            //
+            //
+            __DIR__ . '/views/helpers/starter_login.blade.php' => resource_path('views/app/auth/starter_login.blade.php'),
+        ],[
+            self::PACKAGE_NAME, $this->getPackageName(':essentials')
+        ]);
 
-            /**
-             * Routes
-             */
-            __DIR__ . '/../routes/defaults.php' => base_path('routes/web.php'),
-
-        ], ['laravel-starter', 'laravel-starter:essentials']);
-
-
-
-        /**
-         * Views structure
-        */
         $this->publishes([
+            
+            // Views structure
+            //
+            // app  >
+            //       auth
+            //       backend  >
+            //                 admin
+            //                 user
+            //       frontend             
+            //       layouts >
+            //                 backend
+            //                 frontend
+            //
             __DIR__ . '/views/structure' => resource_path('views/'),
-        ], ['laravel-starter', 'laravel-starter:views-structure']);
+        ], [
+            self::PACKAGE_NAME, $this->getPackageName(':views-structure')
+        ]);
 
-
-        /**
-         * Auth controller, views and routes
-         */
         $this->publishes([
-            __DIR__ . '/Auth/LoginController.php' => app_path('Http/Controllers/Auth/LoginController.php'),
-            __DIR__ . '/../routes/auth.php'       => base_path('routes/web.php'),
-        ], ['laravel-starter', 'laravel-starter:auth']);
-
-        /**
-         * Adminto bootstrap 4 them
-         */
+            
+            // Login resources
+            //
+            //
+            __DIR__ . '/Controllers/LoginController.php' => app_path('Http/Controllers/Auth/LoginController.php'),
+            __DIR__ . '/../routes/auth.php'              => base_path('routes/web.php'),
+        ], [
+            self::PACKAGE_NAME, $this->getPackageName(':auth')
+        ]);
+ 
         $this->publishes([
-            __DIR__ . '/views/adminto-bootstrap4/layouts'         => resource_path('views/app/layouts/'),
-            __DIR__ . '/views/adminto-bootstrap4/login.blade.php' => resource_path('views/app/auth/login.blade.php'),
-        ], ['laravel-starter', 'laravel-starter:adminto-bootstrap-4-theme']);
+            
+            // Adminto bootstrap 4 resources (assets and views)
+            //
+            //
+            __DIR__ . '/views/adminto-bootstrap4/layouts'                 => resource_path('views/app/layouts/'),
+            __DIR__ . '/views/adminto-bootstrap4/adminto_login.blade.php' => resource_path('views/app/auth/login.blade.php'),
+            __DIR__ . '/../dist/adminto'                                  => public_path('vendor/adminto'),
+        ], [
+            self::PACKAGE_NAME, $this->getPackageName(':adminto-bootstrap-4-resources')
+        ]);
 
-        /**
-         * Blade components
-         */
-        $this->publishes([
-            __DIR__ . '/views/components' => resource_path('views/components/laravel-starter-themes/')
-        ], ['laravel-starter', 'laravel-starter:blade-components']);
+        // $this->publishes([
+        //     // Default Blade view components
+        //     //
+        //     //
+        //     __DIR__ . '/views/components' => resource_path('views/components/laravel-starter-themes/')
+        // ], [
+        //     self::PACKAGE_NAME, $this->getPackageName(':blade-themes')
+        // ]);
 
-        /**
-         * Database Models, Migrations and Seeders
-         */
+        
         $this->publishes([
+            
+            // Default database resources
+            //
+            //
             __DIR__ . '/../database/migrations' => database_path('migrations'),
             __DIR__ . '/../database/seeders'    => database_path('seeders'),
             __DIR__ . '/../database/models'     => base_path('app/Models'),
-        ], ['laravel-starter', 'laravel-starter:database']);        
+        ], [
+            self::PACKAGE_NAME, $this->getPackageName(':database')
+        ]);
     }
 
 
@@ -212,11 +234,11 @@ class LaravelStarterServiceProvider extends ServiceProvider
 
         $this->commands([
             PublishCommand::class,  // lstarter:publish,
-            MakeViewCommand::class // lstarer:make-view
+            //MakeViewCommand::class  // lstarer:make-view
         ]);
     }
 
-    public function registerLivewireComponents()
+    protected function registerLivewireComponents()
     {
         if ($this->app->runningInConsole()) return;
 
@@ -226,15 +248,32 @@ class LaravelStarterServiceProvider extends ServiceProvider
     }
 
     protected function publishesToGroups(array $paths, $groups = null)
-    {
+    {        
         if (is_null($groups)) {
             $this->publishes($paths);
-
-            return;
+        }else{
+            foreach ((array) $groups as $group) {
+                $this->publishes($paths, $group);
+            }
         }
 
-        foreach ((array) $groups as $group) {
-            $this->publishes($paths, $group);
-        }
+        return $this;
+    }
+
+
+    /**
+     * Get the laravel starter name 
+     * 
+     * @param string $join
+     * 
+     * @return string
+     */
+    public function getPackageName(string $join = '')
+    {
+        $name = self::PACKAGE_NAME;
+
+        if (!empty($join)) $name .= $join;
+
+        return $name;
     }
 }

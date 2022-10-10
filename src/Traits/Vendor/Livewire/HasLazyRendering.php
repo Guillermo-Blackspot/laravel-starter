@@ -2,7 +2,6 @@
 
 namespace BlackSpot\Starter\Traits\Vendor\Livewire;
 
-
 trait HasLazyRendering
 {
  
@@ -26,9 +25,4 @@ trait HasLazyRendering
     {
         $this->isReady = $isReady;
     }
-
-
-    
-
-
 }

@@ -2,21 +2,18 @@
 
 namespace BlackSpot\Starter\Traits\App;
 
-use Illuminate\Support\Arr;
-
 trait HasSweetAlert
 {
-
-  public $sweetalert_browser_event = 'browser_event.sweetalert2';
+  public $sweetAlertEventName = 'sweetalert2';
 
   public function sweetAlertComponent(array $component = [])
   {
-    $this->dispatchBrowserEvent($this->sweetalert_browser_event . '.open', $component);
+    $this->dispatchBrowserEvent("browser_event.{$this->sweetAlertEventName}.open", $component);
   }
 
   public function sweetAlertClose()
   {
-    $this->dispatchBrowserEvent($this->sweetalert_browser_event . '.close');
+    $this->dispatchBrowserEvent("browser_event.{$this->sweetAlertEventName}.close");
   }
 
   private function mixValues($original, array $mixing)

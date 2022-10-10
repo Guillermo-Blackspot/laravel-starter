@@ -9,7 +9,6 @@ use Livewire\Component;
 
 class PreviewFile extends Component
 {
-
     use HasSweetAlert;
 
     public $listenerId = 'filesmanager';

@@ -6,5 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'MmoAndFriends\\Mexico\\' => array($vendorDir . '/mmo-and-friends/estados-municipios-mexico/src'),
+    'GuillermoRod\\BladeUi\\' => array($vendorDir . '/guillermo-rod/laravel-blade-ui/src'),
     'BlackSpot\\Starter\\' => array($baseDir . '/src'),
 );

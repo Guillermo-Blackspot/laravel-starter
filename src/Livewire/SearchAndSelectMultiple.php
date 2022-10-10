@@ -11,19 +11,19 @@ class SearchAndSelectMultiple extends Component
 {
     use HasToast, HasSearch, WithPagination;
 
-    protected $paginationTheme = 'bootstrap';
+    protected $paginationTheme       = 'bootstrap';
     public $searchAndSelectItemsPage = 1;    
-    public $perPage = 15;
-    public $listenerId = null;
-    public $selectedItems = [];
-    public $executeQuery = false;
+    public $perPage                  = 15;
+    public $listenerId               = null;
+    public $selectedItems            = [];
+    public $executeQuery             = false;
+    public $showShortCuts            = false;
+    public $emitUp                   = 'setSelectedItems';
+    public $selectMode               = 'multiple';
+
     protected $queryString = [
         'searchAndSelectItemsPage' => ['except' => 1],
-    ];
-    public $showShortCuts = false;
-    public $emitUp = 'setSelectedItems';
-    public $selectMode = 'multiple';
-
+    ];    
 
     public function mount()
     {
@@ -55,14 +55,6 @@ class SearchAndSelectMultiple extends Component
     }
 
 
-    public function render()
-    {
-        return view('livewire.backend.admin.sales.contacts.search-and-select-one', [
-            'items' => $this->getData()
-        ]);
-    }
-
-
     /**
      * Get event listeners
      *
@@ -90,30 +82,59 @@ class SearchAndSelectMultiple extends Component
         $this->resetSearch();
     }
 
-    
-    public function addItem($itemToAdd) 
+    private function itemIsSelected($item)
     {
-        if ($this->selectMode == 'one' && !empty($this->selectedItems)) {
-            return $this->toastError('¡Solo puedes seleccionar una opción!');
+        return isset($this->selectedItems[$item]);
+    }
+    
+    public function addItem($item) 
+    {
+        if ($this->selectMode == 'one' && count($this->selectedItems) > 0) {
+            return $this->toastError($this->getSelectOneMessage());
         }
 
-        if (!isset($this->selectedItems[$itemToAdd])) {            
-            $this->selectedItems[$itemToAdd] = $itemToAdd;
-    
-            $this->notifyParentComponent();        
+        if ($this->itemIsSelected($item)) {
+            return ;
         }
+        
+        $this->addingItem($item);
+
+        $this->selectedItems[$item] = $item;
+
+        $this->itemAdded($item, $this->selectedItems[$item]);
+
+        $this->notifyParentComponent();
     }
 
-    public function removeItem($itemToRemove)
+    public function removeItem($item)
     {
-        if (isset($this->selectedItems[$itemToRemove])) {
-            $this->selectedItems = array_filter($this->selectedItems, function($item) use($itemToRemove) {
-                return $item != $itemToRemove;
-            }, ARRAY_FILTER_USE_KEY);
-
-            $this->notifyParentComponent();
+        if (!$this->itemIsSelected($item)) {
+            return ;
         }
+
+        $this->removingItem($item);
+        unset($this->selectedItems[$item]);
+        $this->itemRemoved($item);
+        $this->notifyParentComponent();
     }
+
+
+    protected function getSelectOneMessage()
+    {
+        return '¡Solo puedes seleccionar una opción!';
+    }
+    
+    protected function addingItem($itemKey)
+    {}
+
+    protected function itemAdded($itemKey, $data)
+    {}
+
+    protected function removingItem($itemKey)
+    {}
+
+    protected function itemRemoved($itemKey)
+    {}
 
     /**
      * Set selected items from a event listener

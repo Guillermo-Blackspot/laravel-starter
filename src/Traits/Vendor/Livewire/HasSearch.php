@@ -2,8 +2,6 @@
 
 namespace BlackSpot\Starter\Traits\Vendor\Livewire;
 
-use Illuminate\Pagination\CursorPaginator;
-
 /**
  * Trait for add the ability for search
  * 
@@ -16,7 +14,7 @@ trait HasSearch
      * The name of the input search
      * @var string
      */
-    public $search   = '';
+    public $search = '';
 
     /**
      * Determine if the search is enabled
@@ -57,8 +55,8 @@ trait HasSearch
     public function doSearch($do = true, $toSearch = '', $attr = 'search')
     {
         $this->fill([
-            'inSearch' => ($do == false || ($toSearch == '' || $toSearch == [])) ? false : true,
-            'search'   => ($do == false) ? '' : trim($toSearch)
+            'inSearch' => $do == false || empty($toSearch) ? false : true,
+            'search'   => $do == false ? '' : trim($toSearch)
         ]);
 
         if ($this->inSearch) {

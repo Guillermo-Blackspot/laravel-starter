@@ -1,0 +1,111 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "35c83cf5b3b17bd1150f6d7baec82d00",
+    "packages": [
+        {
+            "name": "guillermo-rod/laravel-blade-ui",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Guillermo-Rod/laravel-blade-ui.git",
+                "reference": "583499f06c1d6c445b15bb656194afe0c86b9165"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Guillermo-Rod/laravel-blade-ui/zipball/583499f06c1d6c445b15bb656194afe0c86b9165",
+                "reference": "583499f06c1d6c445b15bb656194afe0c86b9165",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "GuillermoRod\\BladeUi\\LaravelBladeUiServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuillermoRod\\BladeUi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guillermo Rodriguez",
+                    "email": "guillermo.rodriguez.developer@gmail.com"
+                }
+            ],
+            "description": "A set of components to utilise in your Laravel Blade views supporting custom themes",
+            "support": {
+                "issues": "https://github.com/Guillermo-Rod/laravel-blade-ui/issues",
+                "source": "https://github.com/Guillermo-Rod/laravel-blade-ui/tree/v1.0.0-bootstrap4"
+            },
+            "time": "2022-10-10T01:48:47+00:00"
+        },
+        {
+            "name": "mmo-and-friends/estados-municipios-mexico",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mmo-and-friends/estados-municipios-mexico.git",
+                "reference": "8d25249c64346442d04d5332ff0d19b3b1d84dc3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mmo-and-friends/estados-municipios-mexico/zipball/8d25249c64346442d04d5332ff0d19b3b1d84dc3",
+                "reference": "8d25249c64346442d04d5332ff0d19b3b1d84dc3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MmoAndFriends\\Mexico\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guillermo Rodriguez",
+                    "email": "guillermo.rod.dev@gmail.com"
+                }
+            ],
+            "description": "Un paquete de php y javascript de los estados y municipios de mexico, soporta el comando mexico:publish para laravel",
+            "support": {
+                "issues": "https://github.com/mmo-and-friends/estados-municipios-mexico/issues",
+                "source": "https://github.com/mmo-and-friends/estados-municipios-mexico/tree/v1.0.1"
+            },
+            "time": "2022-04-11T20:31:48+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "guillermo-rod/laravel-blade-ui": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.3"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
+}

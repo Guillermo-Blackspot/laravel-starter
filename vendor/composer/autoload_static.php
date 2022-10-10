@@ -11,6 +11,14 @@ class ComposerStaticInit4c5105920237fa97a2621d436b4bec63
     );
 
     public static $prefixLengthsPsr4 = array (
+        'M' => 
+        array (
+            'MmoAndFriends\\Mexico\\' => 21,
+        ),
+        'G' => 
+        array (
+            'GuillermoRod\\BladeUi\\' => 21,
+        ),
         'B' => 
         array (
             'BlackSpot\\Starter\\' => 18,
@@ -18,6 +26,14 @@ class ComposerStaticInit4c5105920237fa97a2621d436b4bec63
     );
 
     public static $prefixDirsPsr4 = array (
+        'MmoAndFriends\\Mexico\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mmo-and-friends/estados-municipios-mexico/src',
+        ),
+        'GuillermoRod\\BladeUi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guillermo-rod/laravel-blade-ui/src',
+        ),
         'BlackSpot\\Starter\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',

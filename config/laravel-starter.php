@@ -4,22 +4,14 @@ return [
 
   /*
   |------------------------------------------------------------------------------
-  | Global laravel starter keys
+  | Conekta keys
   |------------------------------------------------------------------------------
-  |
-  | Pagination size
-  | Super admin permission name
-  |
+  | 
   */
   
-  'pagination_size' => 30,
-
-  'permissions' => [    
-    'super-admin' => 'im-a-super-admin-and-i-have-full-access', //full access 
+  'conekta' => [
+    'private_key' => '',
+    'public_key'  => ''
   ],
-
-  'sweetAlert2' => [
-    'mixingAll' => []
-  ]
   
 ];

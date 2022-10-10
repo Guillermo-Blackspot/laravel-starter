@@ -6,11 +6,11 @@ use Illuminate\Support\Arr;
 
 trait HasToast
 {
-  public $toastr_browser_event = 'browser_event.toastr';
+  public $toastEventName = 'toastr';
 
   private function dispatchToast($options)
   {
-    $this->dispatchBrowserEvent($this->toastr_browser_event,$options);
+    $this->dispatchBrowserEvent("browser_event.{$this->toastEventName}",$options);
   }
 
   public function toast(...$args)
@@ -63,21 +63,10 @@ trait HasToast
    * @param string|null $successMessage
    * @param string|null $errorMessage
    */
-  public function simpleToast($success, $successMessage = null, $errorMessage = null)
+  public function simpleToast($success, $successMessage = '¡Exito!', $errorMessage = 'Error')
   {
-    if ($successMessage == null) {
-      $successMessage = '¡Exito!';
-    }
+    if ($success) return $this->toastSuccess($successMessage);
 
-    if ($errorMessage == null) {
-      $errorMessage = 'Error';
-    }
-
-    if ($success) {
-      $this->toastSuccess($successMessage);
-    }else{
-      $this->toastError($errorMessage);
-    }
-
+    return $this->toastError($errorMessage);
   }
 }

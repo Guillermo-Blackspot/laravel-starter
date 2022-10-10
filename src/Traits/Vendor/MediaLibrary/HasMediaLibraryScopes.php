@@ -45,7 +45,6 @@ trait HasMediaLibraryScopes
             }
             $builded[] = "media_{$relationOrClosure}:".($eagerSelect ?? $this->defaultMediaLibraryEagerSelect);
         }
-
         return $builded;
     }    
 }

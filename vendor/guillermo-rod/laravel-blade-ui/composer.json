@@ -1,0 +1,28 @@
+{
+    "name": "guillermo-rod/laravel-blade-ui",
+    "description": "A set of components to utilise in your Laravel Blade views supporting custom themes",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "GuillermoRod\\BladeUi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Guillermo Rodriguez",
+            "email": "guillermo.rodriguez.developer@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "GuillermoRod\\BladeUi\\LaravelBladeUiServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.3"
+    }
+}

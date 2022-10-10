@@ -16,12 +16,11 @@ class InsertPermissions extends Seeder
     {
         $permissions = [
 
-
             /**
              * Globals
              */
 
-            'im-a-super-admin-and-i-have-full-access',
+             Permission::SUPER_ADMIN_PERMISSION
         ];
 
         foreach ($permissions as $key => $permissionName) {
