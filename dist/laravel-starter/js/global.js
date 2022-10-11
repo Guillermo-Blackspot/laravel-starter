@@ -286,6 +286,8 @@ function settingUpLaraveLivewireFunctions() {
 var globalLoading = null;
 
 domReady(function () {
+    globalLoading = document.querySelector('#global-loading-state-id');
+    
     fadeOutAlerts();    
     settingUpJQueryFunctions();
     settingUpLaraveLivewireFunctions();
@@ -296,6 +298,4 @@ domReady(function () {
     window.addEventListener('bootstrap.modal-close', ({detail}) => {
         $(detail.modalId).modal('hide');
     });
-
-    globalLoading = document.querySelector('#global-loading-state-id');
 });

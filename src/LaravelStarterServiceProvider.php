@@ -8,7 +8,7 @@ use BlackSpot\Starter\BladeComponents\{
     InlineSelect,
     InlineTextarea,
     InputFilter,
-    SimpleFilter,
+    SimpleFilter
 };
 
 
