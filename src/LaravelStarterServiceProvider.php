@@ -56,7 +56,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
     protected function registerViews()
     {
         $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'views', self::PACKAGE_NAME);
-        $this->loadViewsFrom(storage_path('/app/files-manager'), 'files-manager');
+        $this->loadViewsFrom(storage_path('/app/files-manager'), 'files_manager');
     }
 
     /**
@@ -144,25 +144,19 @@ class LaravelStarterServiceProvider extends ServiceProvider
 
         $this->publishesToGroups([
 
-            // Default css, images, js and files for correct functionality
-            //
-            //
+            // Default assets
             __DIR__ . '/../dist/files-manager'   => storage_path('app/files-manager'),                        
-            
+            __DIR__ . '/../dist/laravel-starter' => public_path('vendor/laravel-starter'),
 
             // Default config files for correct functionality
-            //
-            //
             __DIR__ . '/../config/filesmanager.php'                       => base_path('config/filesmanager.php'),
             __DIR__ . '/../config/laravel-starter.php'                    => base_path('config/laravel-starter.php'),
             __DIR__ . '/Livewire/FilesManager/bootstrap-layout.blade.php' => class_exists('Livewire\Livewire') ? resource_path('views/livewire/addons/files-manager/bootstrap-layout.blade.php') : '',
             
             // Default tailwind css login
-            //
-            //
             __DIR__ . '/views/helpers/starter_login.blade.php' => resource_path('views/app/auth/starter_login.blade.php'),
         ],[
-            self::PACKAGE_NAME, $this->getPackageName(':essentials')
+            self::PACKAGE_NAME, $this->getPackageName('-essentials')
         ]);
 
         $this->publishes([
@@ -181,7 +175,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             //
             __DIR__ . '/views/structure' => resource_path('views/'),
         ], [
-            self::PACKAGE_NAME, $this->getPackageName(':views-structure')
+            self::PACKAGE_NAME, $this->getPackageName('-views-structure')
         ]);
 
         $this->publishes([
@@ -204,7 +198,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             __DIR__ . '/views/adminto-bootstrap4/adminto_login.blade.php' => resource_path('views/app/auth/login.blade.php'),
             __DIR__ . '/../dist/adminto'                                  => public_path('vendor/adminto'),
         ], [
-            self::PACKAGE_NAME, $this->getPackageName(':adminto-bootstrap-4-resources')
+            self::PACKAGE_NAME, $this->getPackageName('-adminto-bootstrap-4-resources')
         ]);
 
         // $this->publishes([
@@ -226,7 +220,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             __DIR__ . '/../database/seeders'    => database_path('seeders'),
             __DIR__ . '/../database/models'     => base_path('app/Models'),
         ], [
-            self::PACKAGE_NAME, $this->getPackageName(':database')
+            self::PACKAGE_NAME, $this->getPackageName('-database')
         ]);
     }
 

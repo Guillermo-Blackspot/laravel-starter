@@ -9,6 +9,7 @@ class PublishCommand extends Command
 {
     protected $signature = 'laravel-starter:publish 
         { --essentials : The laravel starter essentials (assets, default files manager resources, config files, starter login) },
+        { --assets : Indicates if the assets should be published},
         { --views-structure : Indicates if the views structure should be published },
         { --auth : Indicates if all auth files (controller and routes) should be published },
         { --database : Indicates if database resources should be published (models, migrations and seeders) },
@@ -19,6 +20,8 @@ class PublishCommand extends Command
 
     public function handle()
     {   
+        if ($this->option('assets')) $this->publishAssets();
+
         if ($this->option('essentials')) $this->publishEssentials();
         
         if ($this->option('views-structure')) $this->publishViewsStructure();
@@ -34,29 +37,36 @@ class PublishCommand extends Command
             $this->publishViewsStructure();
             $this->publishAuthFiles();
             $this->publishDatabase();
+            //$this->publishAssets();
         }
         
         $this->resolveThemeToPublish();
     }
 
+    public function publishAssets()
+    {
+        $this->call('vendor:publish', ['--tag' => $this->getPackageName('-assets'), '--force' => true]);
+    }
+
     public function publishEssentials()
     {
-        $this->call('vendor:publish', ['--tag' => $this->getPackageName(':essentials'), '--force' => false]);
+        $this->publishAssets();
+        $this->call('vendor:publish', ['--tag' => $this->getPackageName('-essentials'), '--force' => false]);
     }
 
     public function publishViewsStructure()
     {
-        $this->call('vendor:publish', ['--tag' => $this->getPackageName(':views-structure'), '--force' => false]);
+        $this->call('vendor:publish', ['--tag' => $this->getPackageName('-views-structure'), '--force' => false]);
     }
 
     public function publishAuthFiles()
     {
-        $this->call('vendor:publish', ['--tag' => $this->getPackageName(':auth'), '--force' => false]);   
+        $this->call('vendor:publish', ['--tag' => $this->getPackageName('-auth'), '--force' => false]);   
     }    
 
     public function publishDatabase()
     {
-        $this->call('vendor:publish', ['--tag' => $this->getPackageName(':database'), '--force' => false]);
+        $this->call('vendor:publish', ['--tag' => $this->getPackageName('-database'), '--force' => false]);
     }
 
     // public function publishBladeThemes()
@@ -73,7 +83,7 @@ class PublishCommand extends Command
 
     public function publishAdmintoBootstrap4Theme()
     {
-        $this->call('vendor:publish', ['--tag' => $this->getPackageName(':adminto-bootstrap-4-resources'), '--force' => false]);
+        $this->call('vendor:publish', ['--tag' => $this->getPackageName('-adminto-bootstrap-4-resources'), '--force' => false]);
     }    
 
 
