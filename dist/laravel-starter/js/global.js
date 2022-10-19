@@ -4,7 +4,7 @@
  * @param {function} fn 
  */
 
-function domReady(fn) {
+ function domReady(fn) {
     // see if DOM is already available
     if (window.document.readyState === "complete" || window.document.readyState === "interactive") {
         // call on next available tick
@@ -233,11 +233,11 @@ function displayToastSuccess(message) {
 }
 
 function hideSweetAlert() {
-    if (window.swal) {
-        swal.close();
-    }
     if (window.Swal) {
         Swal.close();    
+    }
+    if (window.swal) {
+        swal.close();
     }
 }
 
@@ -255,7 +255,9 @@ function setTopMenuLoaderAs(visibility) {
 
 function settingUpJQueryFunctions() {
     if (window.jQuery) {
-        $('[data-toggle="tooltip"]').tooltip()
+        if (jQuery().tooltip) {
+            $('[data-toggle="tooltip"]').tooltip()
+        }
     }
 }
 
@@ -297,5 +299,5 @@ domReady(function () {
     });
     window.addEventListener('bootstrap.modal-close', ({detail}) => {
         $(detail.modalId).modal('hide');
-    });
+    });    
 });

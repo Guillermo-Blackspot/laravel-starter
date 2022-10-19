@@ -143,7 +143,6 @@ class LaravelStarterServiceProvider extends ServiceProvider
         ],[$this->getPackageName('-assets')]);
 
         $this->publishesToGroups([
-
             // Default assets
             __DIR__ . '/../dist/files-manager'   => storage_path('app/files-manager'),                        
             __DIR__ . '/../dist/laravel-starter' => public_path('vendor/laravel-starter'),
@@ -156,7 +155,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             // Default tailwind css login
             __DIR__ . '/views/helpers/starter_login.blade.php' => resource_path('views/app/auth/starter_login.blade.php'),
         ],[
-            self::PACKAGE_NAME, $this->getPackageName('-essentials')
+            $this->getPackageName('-essentials')
         ]);
 
         $this->publishes([
@@ -175,7 +174,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             //
             __DIR__ . '/views/structure' => resource_path('views/'),
         ], [
-            self::PACKAGE_NAME, $this->getPackageName('-views-structure')
+            $this->getPackageName('-views-structure')
         ]);
 
         $this->publishes([
@@ -186,7 +185,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             __DIR__ . '/Controllers/LoginController.php' => app_path('Http/Controllers/Auth/LoginController.php'),
             __DIR__ . '/../routes/auth.php'              => base_path('routes/web.php'),
         ], [
-            self::PACKAGE_NAME, $this->getPackageName(':auth')
+            $this->getPackageName(':auth')
         ]);
  
         $this->publishes([
@@ -198,7 +197,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             __DIR__ . '/views/adminto-bootstrap4/adminto_login.blade.php' => resource_path('views/app/auth/login.blade.php'),
             __DIR__ . '/../dist/adminto'                                  => public_path('vendor/adminto'),
         ], [
-            self::PACKAGE_NAME, $this->getPackageName('-adminto-bootstrap-4-resources')
+            $this->getPackageName('-adminto-bootstrap-4-resources')
         ]);
 
         // $this->publishes([
@@ -207,7 +206,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
         //     //
         //     __DIR__ . '/views/components' => resource_path('views/components/laravel-starter-themes/')
         // ], [
-        //     self::PACKAGE_NAME, $this->getPackageName(':blade-themes')
+        //     $this->getPackageName(':blade-themes')
         // ]);
 
         
@@ -220,7 +219,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             __DIR__ . '/../database/seeders'    => database_path('seeders'),
             __DIR__ . '/../database/models'     => base_path('app/Models'),
         ], [
-            self::PACKAGE_NAME, $this->getPackageName('-database')
+            $this->getPackageName('-database')
         ]);
     }
 

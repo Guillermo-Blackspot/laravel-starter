@@ -97,7 +97,9 @@ class SearchAndSelectMultiple extends Component
             return ;
         }
         
-        $this->addingItem($item);
+        if ($this->addingItem($item) === false) {
+            return ;
+        }
 
         $this->selectedItems[$item] = $item;
 
@@ -112,7 +114,10 @@ class SearchAndSelectMultiple extends Component
             return ;
         }
 
-        $this->removingItem($item);
+        if ($this->removingItem($item) === false) {
+            return ;
+        }
+
         unset($this->selectedItems[$item]);
         $this->itemRemoved($item);
         $this->notifyParentComponent();
