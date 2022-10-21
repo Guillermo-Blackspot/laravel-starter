@@ -289,15 +289,7 @@ var globalLoading = null;
 
 domReady(function () {
     globalLoading = document.querySelector('#global-loading-state-id');
-    
     fadeOutAlerts();    
     settingUpJQueryFunctions();
     settingUpLaraveLivewireFunctions();
-
-    window.addEventListener('bootstrap.modal-open', ({detail}) => {
-        $(detail.modalId).modal('show');
-    });
-    window.addEventListener('bootstrap.modal-close', ({detail}) => {
-        $(detail.modalId).modal('hide');
-    });    
 });
