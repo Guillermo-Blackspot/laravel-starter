@@ -138,11 +138,11 @@ class PreviewFile extends Component
         $this->isExternal = $this->isInsideOfStorage == false && $this->isInsideOfPublic == false;
 
         if ($this->isExternal) {
-            if (Str::contains($this->fileAsset, ['.jpg','.jpeg','.png','.gif'])){
+            if (Str::contains($this->fileAsset, ['.jpg','.jpeg','.png','.gif','ui-avatars.com'])){
                 $this->fileType = 'image';
             }elseif (Str::contains($this->fileAsset, ['.mp4'])){
                 $this->fileType = 'video';
-            }elseif (Str::contains($fileAsset,['youtube','you.be'])) {
+            }elseif (Str::contains($this->fileAsset,['youtube','you.be'])) {
                 $this->fileType = 'youtube';
             }
         }
