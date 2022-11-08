@@ -1,6 +1,7 @@
 <?php
 namespace BlackSpot\Starter\Livewire\FilesManager;
 
+use BlackSpot\Starter\Traits\App\HasModal;
 use BlackSpot\Starter\Traits\App\HasSweetAlert;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
@@ -9,10 +10,10 @@ use Livewire\Component;
 
 class PreviewFile extends Component
 {
-    use HasSweetAlert;
+    use HasSweetAlert, HasModal;
 
     public $listenerId = 'filesmanager';
-    public $modalId, $viewLocation, $location = 'bootstrap';
+    public $viewLocation, $location = 'bootstrap';
 
 
     public $fullUrl;
@@ -138,11 +139,11 @@ class PreviewFile extends Component
         $this->isExternal = $this->isInsideOfStorage == false && $this->isInsideOfPublic == false;
 
         if ($this->isExternal) {
-            if (Str::contains($this->fileAsset, ['.jpg','.jpeg','.png','.gif','ui-avatars.com'])){
+            if (Str::contains($this->fileAsset, ['.jpg','.jpeg','.png','.gif'])){
                 $this->fileType = 'image';
             }elseif (Str::contains($this->fileAsset, ['.mp4'])){
                 $this->fileType = 'video';
-            }elseif (Str::contains($this->fileAsset,['youtube','you.be'])) {
+            }elseif (Str::contains($fileAsset,['youtube','you.be'])) {
                 $this->fileType = 'youtube';
             }
         }
@@ -151,9 +152,7 @@ class PreviewFile extends Component
             $this->invalidFile = true;
         }
 
-        $this->dispatchBrowserEvent($this->location.'.modal-open',[
-            'modalId' => $this->modalId
-        ]);
+        $this->openModal($this->modalId, $this->location);        
     }
 
 
