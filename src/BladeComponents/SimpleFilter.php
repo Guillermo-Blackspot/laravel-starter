@@ -9,25 +9,34 @@ class SimpleFilter extends Component
 {
     use Helpers;
 
-    public $wire, $wirePages, $wireSearch, $columnsToSearch, $inSearch, $searchValue, $theme;
+    public $wire, 
+        $wireSearch, 
+        $columnsToSearch, 
+        $inSearch, 
+        $searchValue, 
+        $theme;
 
     /**
      * Create a new component instance.
      *
      * @param bool $wire
-     * @param string $wirePages
      * @param string $wireSearch
      * @param mixed $columnsToSearch
      * @return void
      */
-    public function __construct($wire = false, $wirePages = 'perPage', $wireSearch = 'search', $columnsToSearch = null, $inSearch = false, $searchValue = null, $theme = 'bootstrap4')
+    public function __construct(
+        $wire = false, 
+        $wireSearch = 'search',
+        $columnsToSearch = null, 
+        $inSearch = false, 
+        $searchValue = null, 
+        $theme = 'bootstrap4')
     {
         if ($columnsToSearch == null) {
             $columnsToSearch = 'Busca y filtra';
         }
         
         $this->wire            = $wire;
-        $this->wirePages       = $wirePages;
         $this->wireSearch      = $wireSearch;
         $this->columnsToSearch = $columnsToSearch;
         $this->inSearch        = $inSearch;
