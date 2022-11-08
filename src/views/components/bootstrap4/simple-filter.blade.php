@@ -2,63 +2,65 @@
     $randomId1 = Str::randomLetters(10);
 @endphp
 
-<div class="row justify-content-between">
-    <div class="col">
-        <div class="input-group mb-1 parent">
-            <div class="input-group-prepend" 
-                 style="cursor: pointer" 
-                 wire:ignore 
-                 wire:click.prevent="doSearch(1, $event.target.closest('.parent').querySelector('.input-search-query').value, '{{ $wireSearch }}')" 
-                 title="Click para buscar">
-                <span class="input-group-text simple-filter-colors" id="{{ $randomId1 }}"><i class="fa-lg ti-search"></i></span>
-            </div>
-            
+<div class="justify-content-between align-items-center mb-2 w-100">
+    <div class="row" style="row-gap: 10px;">
 
-            <input type="text" 
-                    class="form-control input-search-query" 
-                    value="{{ $searchValue }}"
-                    placeholder="{{ $columnsToSearch }}" 
-                    aria-label="{{ $columnsToSearch }}"
-                    wire:model.debounce.500ms="{{ $wireSearch }}"
-                    aria-describedby="{{ $randomId1 }}"
-                    wire:keydown.enter="doSearch(1,$event.target.value, '{{ $wireSearch }}')"
-                >
-            
-            @if ($inSearch)
-                <div class="input-group-prepend" style="cursor: pointer" wire:ignore wire:click.prevent="doSearch(0)">
-                    <span class="input-group-text bg-transparent text-danger b-0 pl-0 font-weight-bold" title="Click para deshacer busqueda">
-                          <i class="fa-lg dripicons-cross"></i> Deshacer
-                    </span>
-                </div>
-            @endif
-
-        </div>
-    </div>        
-    <div class="col-auto">
-        <div class="form-group row mb-1">
-
-            {{ $actionsLeft ?? '' }}
-
-            @if ($attributes->has('excludePerPage') == false)                
-                <div class="col-auto row">
-                    <label class="col-sm-5 col-form-label col-form-label-sm">Mostrar: </label>                                            
-                    <div class="col-auto">
-                        <select class="form-control simple-filter-colors rounded-sm" wire:model="perPage">
-                            @foreach (explode(',', $attributes->get('perPage', '15,30,50,100')) as $pageCount)                            
-                                <option value="{{ $pageCount }}">{{ $pageCount }}</option>
-                            @endforeach
-                        </select> 
-                    </div>
+        <div class="col">
+            <div class="input-group --parent">
+    
+                <div class="input-group-prepend" 
+                     style="cursor: pointer"
+                     wire:click.prevent="doSearch(1, $event.target.closest('.--parent').querySelector('.input-search-query').value)" 
+                     title="Click para buscar">
+                    <span class="input-group-text simple-filter-colors" style="border: none;" id="{{ $randomId1 }}"><i class="fa-lg ti-search"></i></span>
                 </div>            
-            @endif
-            
-            <div class="btn-group col-auto">
-                {{ $actions ?? '' }}
+    
+                <input type="text" 
+                    class="form-control input-search-query border-left-0" 
+                    placeholder="{{ $attributes->get('placeholder', 'Buscar..') }}" 
+                    {{ $attributes->has('search-value') ? "value='{$attributes->get('search-value')}'" : '' }}
+                    {{ $attributes->has('input-name') ? "name='{$attributes->get('input-name')}'" : ''}}                    
+                    wire:model.debounce.500ms="{{ $attributes->has('wire-input-model') ? $attributes->get('wire-input-model') : 'search' }}"
+                    >
+    
+                @if ($inSearch)
+                    <div class="input-group-prepend" 
+                        style="cursor: pointer" 
+                        wire:click.prevent="doSearch(0)"
+                        >
+                        <span class="input-group-text bg-transparent text-danger b-0 pl-0 font-weight-bold" title="Click para deshacer busqueda">
+                              <i class="fa-lg dripicons-cross"></i> Deshacer
+                        </span>
+                    </div>
+                @endif
             </div>
-        </div>
+        </div>    
+        
+        @if ($attributes->has('exclude-per-page') == false)
+            <div class="col-auto">
+                {{-- <label class="col-form-label col-form-label-sm">Mostrar: </label> --}}
+                <select 
+                    class="form-control simple-filter-colors" 
+                    wire:model="{{ $attributes->has('wire-per-page-model') ? $attributes->get('wire-per-page-model') : 'perPage' }}"
+                    style="border: none">
+                    @foreach (explode(',', $attributes->get('per-page', '15,30,50,100')) as $pageCount)                            
+                        <option value="{{ $pageCount }}">{{ $pageCount }}</option>
+                    @endforeach
+                </select> 
+            </div>
+        @endif
+    
+        @isset($actions)
+            <div class="{{ $actions->attributes->has('new-line') ? 'col-md-12' : 'col-md-auto' }} col-12 {{ $actions->attributes->get('class') }}">
+                <div class="btn-group">                    
+                    {{ $actions ?? '' }}
+                </div>
+            </div>            
+        @endisset
+        
+        {{-- Deprecated: $actionsLeft --}}
+        {{-- Deprecated: $breakcol --}}
+
+        {{ $slot ?? '' }}
     </div>
-
-    {{ $breakcol ?? '' }}
-
-
 </div>

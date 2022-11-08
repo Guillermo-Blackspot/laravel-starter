@@ -52,7 +52,7 @@ trait HasSearch
      * @param mixed $toSearch
      * @return void
      */
-    public function doSearch($do = true, $toSearch = '', $attr = 'search')
+    public function doSearch($do = true, $toSearch = '')
     {
         $this->fill([
             'inSearch' => $do == false || empty($toSearch) ? false : true,
