@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use BlackSpot\Starter\Traits\App\FilesManager;
+use BlackSpot\Starter\Traits\DB\HasAddresses;
 use BlackSpot\Starter\Traits\Vendor\MediaLibrary\DynamicMediaConversions;
 use BlackSpot\Starter\Traits\Vendor\MediaLibrary\HasMediaLibraryScopes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -26,7 +27,8 @@ class User extends Authenticatable implements HasMedia
         InteractsWithMedia,
         FilesManager,
         DynamicMediaConversions,
-        HasMediaLibraryScopes;
+        HasMediaLibraryScopes,
+        HasAddresses;
 
     public const TABLE_NAME = 'users';
 
@@ -126,11 +128,19 @@ class User extends Authenticatable implements HasMedia
     public function getPhoneWithCodeAttribute()
     {   
         $dialCode = null;
+        
+        if ($this->relationLoaded('cellphone_code')) {
+            $dialCode = opt($this->cellphone_code)->dial_code;
+        }elseif ($this->cellphone_code_dial_code != null) {
+            $dialCode = $this->cellphone_code_dial_code;
+        }
 
-        if ($this->cellphone_code != null) {
-            $dialCode = '('.$this->cellphone_code->dial_code.') ';
-        }   
-        return $dialCode . $this->cellphone;
+        $composedNumber = null;
+
+        if ($dialCode != null) $composedNumber = "({$dialCode}) "; 
+        if ($this->cellphone != null) $composedNumber .= $this->cellphone;
+
+        return $composedNumber;
     }
 
     public function getInlineRolesAttribute()
@@ -151,14 +161,15 @@ class User extends Authenticatable implements HasMedia
     public function getPhotoLinkAttribute()
     {      
         if ($this->photo == null) {
+            // if ($this->name != null) {
+            //     return 'https://ui-avatars.com/api/?name='.urlencode($this->name.' '.$this->last_name).'&color=0969da&background=b6e3ff&size=120';
+            // }
             return $this->getFileAsset('defaults.avatars.user',[], false);
         }
-
         if (strpos($this->photo,'http') !== false) {
             return $this->photo;
         }
-
-        return $this->getFileAsset('users', ['{user}' => $this->id], true) . '/' . $this->photo;
+        return $this->getFileAsset('users.profile',['{user}' => $this->id],true) . '/' . $this->photo;
     }    
     
     /**

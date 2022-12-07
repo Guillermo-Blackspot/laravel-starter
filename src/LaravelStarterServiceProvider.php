@@ -221,6 +221,11 @@ class LaravelStarterServiceProvider extends ServiceProvider
         ], [
             $this->getPackageName('-database')
         ]);
+
+        // Model stubs
+        $this->publishes([__DIR__ . '/../database/models' => base_path('app/vendor-stubs/laravel-starter/models')], [
+            $this->getPackageName('-model-stubs')
+        ]);
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Morphs;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -77,6 +77,6 @@ class Address extends Model
 
     public function state()
     {
-        return $this->belongsTo(State::class, 'state_id');
+        return $this->belongsTo(\App\Models\State::class, 'state_id');
     } 
 }
