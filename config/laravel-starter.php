@@ -20,7 +20,10 @@ return [
   'table_namespaces' => [  
 
     // \BlackSpot\Starter\Traits\DB\HasAddresses
-    'address' => '\App\Models\Address'
+    'address' => '\App\Models\Morphs\Address',
+
+    // \BlackSpot\Starter\Traits\DB\HasTranslations
+    'translation' => '\App\Models\Morphs\Translation'
   ]
   
 ];
