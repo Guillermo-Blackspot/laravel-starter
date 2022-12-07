@@ -18,12 +18,12 @@ trait HasAddresses
     }
 
     public function addresses(){
-        return $this->morphMany(config('laravel-starter.table_namespaces.address'), 'addressable');
+        return $this->morphMany(config('laravel-starter.table_namespaces.address', 'App\Models\Morphs\Address'), 'addressable');
     }
 
     public function main_address()
     {
-        return $this->morphOne(config('laravel-starter.table_namespaces.address'), 'addressable')->where('main',true);
+        return $this->morphOne(config('laravel-starter.table_namespaces.address', 'App\Models\Morphs\Address'), 'addressable')->where('main',true);
     }
 }
 

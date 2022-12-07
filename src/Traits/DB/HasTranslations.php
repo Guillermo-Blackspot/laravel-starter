@@ -21,7 +21,7 @@ trait HasTranslations
             throw new Exception('The '.__FUNCTION__.' must be called after create the '.self::class, 1);
         }        
 
-        $model = config('laravel-starter.table_namespaces.translation');
+        $model = config('laravel-starter.table_namespaces.translation','\App\Models\Morphs\Translation');
 
         (new $model)->where('lang', $lang)->updateOrCreate(
             [
@@ -110,6 +110,6 @@ trait HasTranslations
      */
     public function translations()
     {
-        return $this->morphMany(config('laravel-starter.table_namespaces.translation'), 'model');
+        return $this->morphMany(config('laravel-starter.table_namespaces.translation','\App\Models\Morphs\Translation'), 'model');
     }
 }
