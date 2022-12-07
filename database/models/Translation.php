@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Translation extends Model
+{
+    /** 
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'translations';
+    public const TABLE_NAME = 'translations';
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
+     * ---------------------------+
+     * Helper functions
+     * ---------------------------+
+     */
+
+    public static function getDefaultValidationRules(&$merge = [])
+    {
+        $rules =  [
+            'translation.lang' => 'required',
+            'translation.attribute' => 'required',
+            'translation.translation' => 'required',
+        ];
+
+        if (!empty($merge)) {
+            $rules = $merge = array_merge($merge, $rules);
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Get the owning addressable model.
+     */
+    public function model(){
+        return $this->morphTo();
+    }    
+}
