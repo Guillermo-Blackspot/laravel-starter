@@ -18,8 +18,8 @@
                 <input type="text" 
                     class="form-control input-search-query border-left-0" 
                     placeholder="{{ $attributes->get('placeholder', 'Buscar..') }}" 
-                    {{ $attributes->has('search-value') ? "value='{$attributes->get('search-value')}'" : '' }}
-                    {{ $attributes->has('input-name') ? "name='{$attributes->get('input-name')}'" : ''}}                    
+                    {{-- $attributes->has('search-value')?"value='$attributes->get('search-value')'":'' --}}
+                    {{ $attributes->has('input-name') ? "name='{$attributes->get('input-name')}'" : ''}}        
                     wire:model.debounce.500ms="{{ $attributes->has('wire-input-model') ? $attributes->get('wire-input-model') : 'search' }}"
                     >
     
@@ -28,7 +28,7 @@
                         style="cursor: pointer" 
                         wire:click.prevent="doSearch(0)"
                         >
-                        <span class="input-group-text bg-transparent text-danger b-0 pl-0 font-weight-bold" title="Click para deshacer busqueda">
+                        <span class="input-group-text bg-transparent text-danger b-0 pl-0" title="Click para deshacer busqueda">
                               <i class="fa-lg dripicons-cross"></i> Deshacer
                         </span>
                     </div>
