@@ -37,6 +37,8 @@ function get_youtube_video_id($youtubeUrl)
   }elseif (Str::contains($youtubeUrl,'youtu.be')) {
     return explode('youtu.be/', $youtubeUrl)[1];
   }
+
+  return $youtubeUrl;
 }
 
 /**
