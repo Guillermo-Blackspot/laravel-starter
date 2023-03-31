@@ -7,8 +7,7 @@
 
         <div class="col">
             <div class="input-group --parent">    
-                <div class="input-group-prepend" 
-                     style="cursor: pointer">
+                <div class="input-group-prepend">
                      {{-- wire:click.prevent="doSearch(1, $event.target.closest('.--parent').querySelector('.input-search-query').value)"  --}}
                     <span class="input-group-text simple-filter-colors" style="border: none;"><i class="fa-lg ti-search"></i></span>
                 </div>            
