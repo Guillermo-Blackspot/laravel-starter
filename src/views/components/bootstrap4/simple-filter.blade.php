@@ -6,14 +6,13 @@
     <div class="row" style="row-gap: 10px;">
 
         <div class="col">
-            <div class="input-group --parent">
-    
-                <div class="input-group-prepend" 
+            <div class="input-group --parent">    
+                {{-- <div class="input-group-prepend" 
                      style="cursor: pointer"
                      wire:click.prevent="doSearch(1, $event.target.closest('.--parent').querySelector('.input-search-query').value)" 
                      title="Click para buscar">
                     <span class="input-group-text simple-filter-colors" style="border: none;" id="{{ $randomId1 }}"><i class="fa-lg ti-search"></i></span>
-                </div>            
+                </div>             --}}
     
                 <input type="text" 
                     class="form-control input-search-query border-left-0" 
