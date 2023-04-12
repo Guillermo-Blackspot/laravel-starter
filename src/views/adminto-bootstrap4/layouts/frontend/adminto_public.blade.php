@@ -58,10 +58,12 @@
         <!-- App js -->
         <script src="{{ asset('vendor/adminto/js/jquery.core.js') }}"></script>
         <script src="{{ asset('vendor/adminto/js/jquery.app.js') }}"></script>        
+        
         <!-- Develper global scripts -->
         <script defer src="{{ asset('vendor/laravel-starter/js/global.js') }}"></script>
         <script defer src="{{ asset('vendor/laravel-starter/js/sweet-alert2.js') }}"></script>
         <script defer src="{{ asset('vendor/laravel-starter/js/toastr-config.js') }}"></script>
+        <script defer src="{{ asset('vendor/laravel-starter/js/modals.js') }}"></script>
 	
         @livewireScripts
         @stack('scripts')

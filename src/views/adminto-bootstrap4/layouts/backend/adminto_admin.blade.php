@@ -18,47 +18,29 @@
         <link rel="stylesheet" href="{{ asset('vendor/laravel-starter/css/global.css') }}" type="text/css">
         {{-- Bootstrap tooltip themes --}}
         <link rel="stylesheet" href="{{ asset('vendor/laravel-starter/css/bootstrap_tooltip_themes.css') }}">
-
         <!-- Toastr -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" type="text/css" />        
-        <!-- Select2 -->
-        {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />         --}}
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" type="text/css" />
+        {{-- Select2 --}}
+        {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
 
-        @livewireStyles
-        @stack('styles')
-        @stack('scripts.head')
-
+        @livewireStyles            
         <style>
-            .topbar .topbar-left, .navbar-default{
-                border-top: none !important;
+            /* Buttons */
+            .btn-white{
+                background-color: #fff;
+                border: 1px solid #efefef;
+                color: #525252;
             }
-            .top-bar-left, 
-            .side-menu,
-            .topbar .topbar-left,
-            ul li a.waves-effect
-            {
-                /** rgb(0 6 57) **/
-                background-color: rgb(0 6 57) !important;
-                color: rgb(144 151 167) !important;
-            }
-            ul li a.waves-effect:hover{
-                color: #fff !important;
-            }
-            .simple-filter-colors{
-                background-color: rgb(91 105 188) !important;
-                color: #fff !important;
-            }
-            #wrapper.enlarged .left.side-menu #sidebar-menu > ul > li > a:hover {
-                /* background-color: var(--success) !important;
-                color: rgb(255 255 255) !important; */
-                background-color: rgb(0 6 57) !important;
-                color: #ffffff !important;
-            }
-            .modal-body{
-                padding: 0px !important;
-            }
+            /* Miscellaneous */
+            .h-100px{ height: 100px; }
+            .h-200px{ height: 200px; }
+            .h-300px{ height: 300px; }
+            .w-300px{ width: 300px; }
+            .w-200px{ width: 200px; }
+            .w-100px{ width: 100px; }
+
             .nav-tabs .nav-link.active{
-                border-color: #ebeff2;
+                border-color: #ebeff2 !important;
                 background-color: #ebeff2 !important;
             }
             .px-20{
@@ -89,21 +71,139 @@
             table.table th{
                 vertical-align: middle;
             }
-            .nav-item.dropdown a{
-                font-size: 22px !important;
-            }
-
-            .nav-item.dropdown a.dropdown-item{
-                line-height: normal !important;
-                font-size: 14px !important;
-            }
             .custom-file-upload{
                 border: 1px solid #ccc;
                 display: inline-block;
                 padding: 6px 12px;
                 cursor: pointer;
+            }
+            textarea.form-control{
+                min-height: 50px;
+            }
+            .modal-body{
+                padding: 0px !important;
+            }
+            .simple-filter-colors{
+                background-color: rgb(91 105 188) !important;
+                color: #fff !important;
+            }
+
+            input[type=submit],
+            .simple-filter-colors,
+            .btn {
+                border-radius: 4px;
+                /*box-shadow: 0 0px 24px 0 rgb(0 0 0 / 6%), 0 1px 0px 0 rgb(0 0 0 / 2%);*/
+                /*box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;*/
+                /*box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;*/
+            }
+            .badge{
+                border-radius: 5px;
+                padding: 5px;
+                font-size: 12px;
+                /*letter-spacing: 1px;*/
+                box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+                color: inherit;
+            }
+            .badge-primary,
+            .badge-danger,
+            .badge-secondary,
+            .bade-purple,
+            .badge-success{ color: #fff; }
+
+            .badge-paused { background-color: #dca847; color: #fff; }
+            .badge-incomplete { background-color: #ce8a08; color: #fff; }
+            .badge-incomplete_expired { background-color: #b41217; color: #fff; }
+            .badge-trialing{ background-color: #1b54d9; color: #fff; }
+            .badge-a, .badge-active, .active_no_invoices { background-color: #257a0e; color: #fff; }
+            .badge-past_due, .badge-c, .badge-canceled, .badge-unlinked, .badge-restricted { background-color: #b41217; color: #fff; }
+            .badge-unpaid { background-color: #9ea9b4; color: #fff; }
+
+            .card-box{ border-radius: 10px; }
+
+            .modal-content{ border-radius: 10px !important; }
+            .page-item > .page-link{
+                color: #495057;
+                font-weight: 600;
+            }
+
+            /* Page item  */
+            .page-item > .page-link.disabled{ background-color: #fff; }
+            .page-item > .page-link.active{ background-color: #e9ecef; }
+
+            /* SweetAlert2 */            
+            .swal2-actions.swal2-confirm:focus,
+            .swal2-actions.swal2-deny:focus,
+            .swal2-actions.swal2-cancel:focus { box-shadow: none !important; }
+            .--swal2-actions { gap: 20px; }
+
+            /* text */
+            .fs-12 { font-size: 12px; }
+            .fs-14 { font-size: 14px; }
+            .fs-16 { font-size: 16px; }
+            .fs-18 { font-size: 18px; }
+            .fs-20 { font-size: 20px; }
+
+            /* flex */
+            .gap-5{ gap: 5px; }
+        </style>
+
+        <style>
+            /* .btn {
+                background-color: #f6f7f9;
+            } */
+            #quick-access-options {
+                color: #000836;
+            }
+
+            .navbar-default, 
+            .content{
+                padding: 0 20px !important;
+            }
+            /*--util .button-menu-mobile{
+                color: #fff;
+            }             */
+            .topbar .topbar-left, 
+            .navbar-default {
+                border-top: none !important;
+            }
+
+            #sidebar-menu > ul > li,
+            #sidebar-menu > ul > li > a {
+                background-color: transparent;
+            }     
+            .nav-item.dropdown a{
+                font-size: 22px !important;
+            }
+            .nav-item.dropdown a.dropdown-item{
+                line-height: normal !important;
+                font-size: 14px !important;
+            }          
+            @media (max-width: 768px){
+                .topbar-left {
+                    display: none;
+                }
+                .topbar .topbar-left {
+                    height: 71px;
+                }
+                .navbar-default {
+                    background-color: #13174a;
+                    color: #a9b1b4;
+                    box-shadow: 0 0px 24px 0 rgb(0 0 0 / 6%), 0 1px 0px 0 rgb(0 0 0 / 2%);
+                }
+                .content-page .content {
+                    margin-top: 50px;
+                }
+                .page-title span{
+                    display: none;
+                }
+                .page-title::after{
+                    content: attr(data-text-content);
+                }
             }            
         </style>
+
+        @stack('styles')
+        @stack('scripts.head')
     </head>
 
 
@@ -138,11 +238,13 @@
                                 </button>
                             </li>
                             <li class="list-inline-item">
-                                <h4 class="page-title" style="display: inline-block; margin-left: 7px;" title="{{ $section ?? 'Admin' }}">{{ Str::limit($section ?? 'Admin', 140) }}</h4>
-                                <div id="global-loading-state-id" style="display: none">
-                                    <x-loading type="square" /> {{-- width: 40px; --}}
+                                <h4 class="page-title" style="display: inline-block; margin-left: 7px;" data-text-content="{{ Str::limit($section ?? 'Admin-'.config('app.name'), 20) }}">
+                                    <span>{{ $section ?? 'Admin-'.config('app.name') }}</span>
+                                </h4>
+                                <div id="global-loading-state-id" style="display: none;">
+                                    <x-loading class="ml-2"/>
                                 </div>
-                            </li>
+                            </li>                            
                         </ul>
                         
 
@@ -335,7 +437,6 @@
         <!-- Select2 -->
         {{-- <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 
-
         <!-- App js -->
         <script src="{{ asset('vendor/adminto/js/jquery.core.js') }}"></script>
         <script src="{{ asset('vendor/adminto/js/jquery.app.js') }}"></script>
@@ -343,10 +444,46 @@
         <!-- Develper global scripts -->
         <script defer src="{{ asset('vendor/laravel-starter/js/global.js') }}"></script>
         <script defer src="{{ asset('vendor/laravel-starter/js/sweet-alert2.js') }}"></script>
-        <script defer src="{{ asset('vendor/laravel-starter/js/toastr-config.js') }}"></script>        
+        <script defer src="{{ asset('vendor/laravel-starter/js/toastr-config.js') }}"></script>
+        <script defer src="{{ asset('vendor/laravel-starter/js/modals.js') }}"></script>
+
+        {{-- Select2 --}}
+        {{-- <script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+
         <!-- Bootstrap tooltip themes -->
         <script defer src="{{ asset('vendor/laravel-starter/js/bootstrap_tooltip_themes-v1.3.js') }}"></script>
 
+        <script defer>
+            // Fix dropdown-menu inside of bootstrap table
+            // Moving the dropdown container outside of the table
+            var dropdownMenu;  
+
+            $('.table').on('show.bs.dropdown', function (e) {
+                var target   = $(e.target);
+                dropdownMenu = target.find('.dropdown-menu');
+
+                $('body').append(dropdownMenu.detach());
+
+                var eOffset = target.offset();
+                
+                dropdownMenu.css({
+                    'display': 'block',
+                    'top': eOffset.top + target.outerHeight(),
+                    'left': eOffset.left,
+                    'font-size':'14px'
+                });
+
+                dropdownMenu.addClass("mobPosDropdown");
+            });
+                
+            $('.table').on('hide.bs.dropdown', function (e) {
+                $(e.target).append(dropdownMenu.detach());
+                dropdownMenu.hide();
+            });
+        </script>
+
+        @jsUrlScript()
+        @stack('scripts.beforeLivewire')
         @livewireScripts
         @stack('scripts')
     </body>
