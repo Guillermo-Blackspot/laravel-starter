@@ -28,6 +28,9 @@ class Translation extends Model
      */
     public $timestamps = true;
 
+    public const ENGLISH = 'en';
+    public const SPANISH = 'es';
+
     /**
      * ---------------------------+
      * Helper functions

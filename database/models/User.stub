@@ -25,9 +25,6 @@ class User extends Authenticatable implements HasMedia
         Notifiable, 
         HasRoles, 
         InteractsWithMedia,
-        FilesManager,
-        DynamicMediaConversions,
-        HasMediaLibraryScopes,
         HasAddresses;
 
     public const TABLE_NAME = 'users';
@@ -164,7 +161,7 @@ class User extends Authenticatable implements HasMedia
             // if ($this->name != null) {
             //     return 'https://ui-avatars.com/api/?name='.urlencode($this->name.' '.$this->last_name).'&color=0969da&background=b6e3ff&size=120';
             // }
-            return $this->getFileAsset('defaults.avatars.user',[], false);
+            return \Storage::disk('filesmanager')->url('defaults/avatars/default_user_avatar_80x80.png');
         }
         if (strpos($this->photo,'http') !== false) {
             return $this->photo;
