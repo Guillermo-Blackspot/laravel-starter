@@ -9,36 +9,37 @@ use Illuminate\Support\Str;
 
 class ChunkedFilePondFiles
 {
-    public function moveToMediaCollection($model, $serverId, $fileName, $toCollection = 'default')
+    public function getTempPath($serverId)
     {
         $filePond = app(\Sopamo\LaravelFilepond\Filepond::class);
         $disk     = config('filepond.temporary_files_disk');
         $filePath = $filePond->getPathFromServerId($serverId);
-
+        
         if (! Storage::disk($disk)->exists($filePath)) {
-            return null;
+            return ;
         }
 
-        $model->addMedia(Storage::disk($disk)->path($filePath))
+        return Storage::disk($disk)->path($filePath);
+    }
+
+    public function moveToMediaCollection($model, $serverId, $fileName, $toCollection = 'default')
+    {
+        $tempFullPath = $this->getTempPath($serverId);
+
+        if (! $tempFullPath) return;
+
+        $model->addMedia($tempFullPath)
             ->usingFileName($fileName)
             ->toMediaCollection($toCollection);
 
         return $fileName;
     }
 
-    public static function moveToFinalDirectory($serverId, $finalDirectory)
+    public function moveToFinalDirectory($serverId, $finalDirectory)
     {
-        // Get the temporary path using the serverId returned by the upload function in `FilepondController.php`
-        $filePond = app(\Sopamo\LaravelFilepond\Filepond::class);
-        $disk     = config('filepond.temporary_files_disk');
-        $filePath = $filePond->getPathFromServerId($serverId);
+        $tempFullPath = $this->getTempPath($serverId);
 
-        // Update null
-        if (! Storage::disk($disk)->exists($filePath)) {            
-            return ;
-        }
-        
-        $tempFullPath = Storage::disk($disk)->path($filePath);
+        if (! $tempFullPath) return;
 
         // Create directory if not exists
         if (! File::isDirectory(dirname($finalDirectory))) {
