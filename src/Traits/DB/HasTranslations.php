@@ -7,6 +7,19 @@ use Exception;
 trait HasTranslations
 {
     /**
+     * Boot on delete method
+     */
+    public static function bootHasTranslations()
+    {
+        static::deleting(function ($model) {
+            if (method_exists($model, 'isForceDeleting') && ! $model->isForceDeleting()) {
+                return;
+            }
+            $model->translations()->delete();
+        });
+    }
+    
+    /**
      * Set an model attribute translation
      * 
      * @param string $attr
