@@ -2,13 +2,18 @@
 
 namespace BlackSpot\Starter;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ChunkedFilePondFiles
 {
+    /**
+     * Get the temporary path of the file with related serverId
+     *
+     * @param string $serverId
+     * @return string
+     */
     public function getTempPath($serverId)
     {
         $filePond = app(\Sopamo\LaravelFilepond\Filepond::class);
@@ -22,7 +27,28 @@ class ChunkedFilePondFiles
         return Storage::disk($disk)->path($filePath);
     }
 
-    public function moveToMediaCollection($model, $serverId, $fileName, $toCollection = 'default')
+    /**
+     * Make a random name with the incoming extension
+     * 
+     * @param string $fileExtension
+     * @param int $length
+     * @return string
+     */
+    public static function makeRandomName($fileExtension, $length = 40)
+    {
+        return Str::slug(Str::random($length)) . '.' . $fileExtension;
+    }
+
+    /**
+     * Move temporary file to spatie media collection
+     *
+     * @param \Spatie\MediaLibrary\HasMedia $model
+     * @param string $serverId
+     * @param string $fileName
+     * @param string $collectionName
+     * @return string
+     */
+    public function moveToMediaCollection($model, $serverId, $fileName, $collectionName = 'default')
     {
         $tempFullPath = $this->getTempPath($serverId);
 
@@ -30,11 +56,18 @@ class ChunkedFilePondFiles
 
         $model->addMedia($tempFullPath)
             ->usingFileName($fileName)
-            ->toMediaCollection($toCollection);
+            ->toMediaCollection($collectionName);
 
         return $fileName;
     }
 
+    /**
+     * Move temporary file to directory
+     *
+     * @param string $serverId
+     * @param string $finalDirectory
+     * @return string
+     */
     public function moveToFinalDirectory($serverId, $finalDirectory)
     {
         $tempFullPath = $this->getTempPath($serverId);
