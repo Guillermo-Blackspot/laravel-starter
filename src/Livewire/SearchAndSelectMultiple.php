@@ -62,9 +62,16 @@ class SearchAndSelectMultiple extends Component
      */
     protected function getListeners()
     {
+        if ($this->listenerId !== null) {
+            return [
+                "{$this->listenerId}.resetInputFields" => 'resetInputFields',
+                "{$this->listenerId}.setSelectedItems" => 'setSelectedItems',
+            ];
+        }
+
         return [
-            "{$this->listenerId}.resetInputFields" => 'resetInputFields',
-            "{$this->listenerId}.setSelectedItems" => 'setSelectedItems',
+            'resetInputFields' => 'resetInputFields',
+            'setSelectedItems' => 'setSelectedItems',
         ];
     }
 
@@ -105,7 +112,7 @@ class SearchAndSelectMultiple extends Component
 
         $this->itemAdded($item, $this->selectedItems[$item]);
 
-        $this->notifyParentComponent();
+        $this->notifyParentComponent('add');
     }
 
     public function removeItem($item)
@@ -120,7 +127,7 @@ class SearchAndSelectMultiple extends Component
 
         unset($this->selectedItems[$item]);
         $this->itemRemoved($item);
-        $this->notifyParentComponent();
+        $this->notifyParentComponent('remove');
     }
 
 
@@ -152,9 +159,18 @@ class SearchAndSelectMultiple extends Component
         $this->executeQuery  = true;        
     }
 
-    public function notifyParentComponent()
+    /**
+     * Notify to parent component
+     *
+     * @param string $action
+     * @return void
+     */
+    public function notifyParentComponent($action)
     {
-        $this->emitUp($this->listenerId.".{$this->emitUp}", $this->selectedItems);
+        if ($this->listenerId !== null) {
+            $this->emitUp($this->listenerId.".{$this->emitUp}", $this->selectedItems, $action);
+        }else{
+            $this->emitUp($this->emitUp, $this->selectedItems, $action);
+        }
     }
-
 }
