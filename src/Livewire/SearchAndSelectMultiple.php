@@ -27,10 +27,6 @@ class SearchAndSelectMultiple extends Component
 
     public function mount()
     {
-        if ($this->listenerId == null) {
-            $this->listenerId = str_replace('\\','_',self::class);
-        }
-
         $this->executeQuery = false;
     }
 
