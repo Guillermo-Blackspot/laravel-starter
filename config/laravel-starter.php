@@ -23,7 +23,10 @@ return [
     'address' => '\App\Models\Morphs\Address',
 
     // \BlackSpot\Starter\Traits\DB\HasTranslations
-    'translation' => '\App\Models\Morphs\Translation'
+    'translation' => '\App\Models\Morphs\Translation',
+
+    // \BlackSpot\Starter\Traits\DB\HasSocialMedia
+    'social_media' => '\App\Models\Morphs\SocialMedia',
   ]
   
 ];
