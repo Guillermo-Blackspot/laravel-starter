@@ -12,7 +12,7 @@ class MakeViewCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'lstarter:make-view {view}';
+    protected $signature = 'laravel-starter:make-view {view}';
 
     /**
      * The console command description.
