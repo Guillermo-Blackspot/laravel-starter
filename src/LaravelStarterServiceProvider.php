@@ -55,7 +55,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
 
     protected function registerViews()
     {
-        $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'views', self::PACKAGE_NAME);
+        $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . 'views/shared', self::PACKAGE_NAME);
         $this->loadViewsFrom(storage_path('/app/files-manager'), 'files_manager');
     }
 
@@ -153,7 +153,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             __DIR__ . '/Livewire/FilesManager/bootstrap-layout.blade.php' => class_exists('Livewire\Livewire') ? resource_path('views/livewire/addons/files-manager/bootstrap-layout.blade.php') : '',
             
             // Default tailwind css login
-            __DIR__ . '/views/helpers/starter_login.blade.php' => resource_path('views/app/auth/starter_login.blade.php'),
+            __DIR__ . '/views/stubs/helpers/starter_login.blade.php' => resource_path('views/app/auth/starter_login.blade.php'),
         ],[
             $this->getPackageName('-essentials')
         ]);
@@ -172,7 +172,7 @@ class LaravelStarterServiceProvider extends ServiceProvider
             //                 backend
             //                 frontend
             //
-            __DIR__ . '/views/structure' => resource_path('views/'),
+            __DIR__ . '/views/stubs/structure' => resource_path('views/'),
         ], [
             $this->getPackageName('-views-structure')
         ]);
@@ -193,8 +193,8 @@ class LaravelStarterServiceProvider extends ServiceProvider
             // Adminto bootstrap 4 resources (assets and views)
             //
             //
-            __DIR__ . '/views/adminto-bootstrap4/layouts'                 => resource_path('views/app/layouts/'),
-            __DIR__ . '/views/adminto-bootstrap4/adminto_login.blade.php' => resource_path('views/app/auth/login.blade.php'),
+            __DIR__ . '/views/stubs/adminto-bootstrap4/layouts'                 => resource_path('views/app/layouts/'),
+            __DIR__ . '/views/stubs/adminto-bootstrap4/adminto_login.blade.php' => resource_path('views/app/auth/login.blade.php'),
             __DIR__ . '/../dist/adminto'                                  => public_path('vendor/adminto'),
         ], [
             $this->getPackageName('-adminto-bootstrap-4-resources')
