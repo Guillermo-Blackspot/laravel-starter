@@ -35,6 +35,7 @@ class SelectMultipleComponent extends Component
        
     /**
      * The listener id for all events that owns to the component
+     * @deprecated but still working, not recomendable
      * @var string|null
      */
     public $listenerId = null;
@@ -72,13 +73,8 @@ class SelectMultipleComponent extends Component
 
     public $selectMode = 'multiple';
 
-
     public function mount()
     {
-        if ($this->listenerId == null) {
-            $this->listenerId = str_replace('\\','_',self::class);
-        }
-
         $this->executeQuery = false;
     }
 
@@ -115,31 +111,11 @@ class SelectMultipleComponent extends Component
     }
 
     /**
-     * Notify changes to components (nested, parent, self)
-     *
-     * @param bool $success
-     * @return bool $success
-     */
-    public function notifyChanges($success)
-    {
-        $this->simpleToast($success);
-
-        if ($success) {      
-            if ($this->formType == 'create') {
-                $this->resetInputFields();
-            }
-
-            $this->emitUp("{$this->listenerId}.freshRows");
-        }
-        return $success;
-    }
-
-    /**
      * Validate if a item is in selected items array
      * @param int $item
-     * @return boolean
+     * @return bool
      */
-    public function itemIsSelected($item)
+    protected function itemIsSelected($item)
     {
         return isset($this->selectedItems[$item]);
     }
@@ -149,7 +125,7 @@ class SelectMultipleComponent extends Component
     {   
         if (($dotPosition = strpos($key, '.')) !== false) {
             //$key = substr($key,0,$dotPosition);
-            $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'array_value_was_modified');
+            $this->notifyParentComponent('array_value_was_modified');
         }
     }
 
@@ -174,11 +150,8 @@ class SelectMultipleComponent extends Component
         }
 
         $this->selectedItems[$item] = $item;
-
         $this->itemAdded($item, $this->selectedItems[$item]);
-
-        $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'add');    
-
+        $this->notifyParentComponent('add');
     }
 
     /**
@@ -197,10 +170,8 @@ class SelectMultipleComponent extends Component
         }
         
         unset($this->selectedItems[$item]);
-
         $this->itemRemoved($item);
-            
-        $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, 'remove');
+        $this->notifyParentComponent('remove');
     }
 
     protected function getSelectOneMessage()
@@ -236,8 +207,6 @@ class SelectMultipleComponent extends Component
         }
 
         $this->executeQuery = true;
-
-        $this->emitUp($this->listenerId.'.freshParentComponent');
     }
 
 
@@ -261,10 +230,43 @@ class SelectMultipleComponent extends Component
      */
     protected function getListeners()
     {
+        if ($this->listenerId != null) {
+            return [
+                "{$this->listenerId}.resetInputFields" => 'resetInputFields',
+                "{$this->listenerId}.setSelectedItems" => 'setSelectedItems',
+            ];
+        }
+
         return [
-            "{$this->listenerId}.resetInputFields" => 'resetInputFields',
-            "{$this->listenerId}.setSelectedItems" => 'setSelectedItems',
+            'resetInputFields' => 'resetInputFields',
+            'setSelectedItems' => 'setSelectedItems',
         ];
+    }
+
+    public function resetInputFields()
+    {
+        $this->resetExcept([            
+            'listenerId'
+        ]);
+        $this->resetErrorBag();
+        $this->resetValidation();
+        $this->resetPage();
+        $this->resetSearch();
+    }
+
+    /**
+     * Notify to parent component
+     *
+     * @param string $action
+     * @return void
+     */
+    public function notifyParentComponent($action)
+    {
+        if ($this->listenerId != null) {
+            $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, $action);
+        }else {
+            $this->emitUp($this->parentEventListener, $this->selectedItems, $action);
+        }
     }
 
 }

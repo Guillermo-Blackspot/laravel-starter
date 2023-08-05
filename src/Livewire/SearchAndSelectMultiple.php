@@ -85,7 +85,7 @@ class SearchAndSelectMultiple extends Component
         $this->resetSearch();
     }
 
-    private function itemIsSelected($item)
+    protected function itemIsSelected($item)
     {
         return isset($this->selectedItems[$item]);
     }
