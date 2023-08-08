@@ -2,10 +2,11 @@
 
 namespace BlackSpot\Starter\Livewire;
 
-use App\Models\User;
 use BlackSpot\Starter\Traits\App\HasSweetAlert;
 use BlackSpot\Starter\Traits\App\HasToast;
+use BlackSpot\Starter\Traits\Vendor\Livewire\HasDynamicEmits;
 use BlackSpot\Starter\Traits\Vendor\Livewire\HasSearch;
+use Illuminate\Support\Arr;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,7 +15,8 @@ class SelectMultipleComponent extends Component
     use WithPagination,
         HasToast, 
         HasSweetAlert,
-        HasSearch;
+        HasSearch,
+        HasDynamicEmits;
 
     /**
      * Pagination theme
@@ -32,14 +34,7 @@ class SelectMultipleComponent extends Component
      * @var int
      */
     public $perPage = 15;
-       
-    /**
-     * The listener id for all events that owns to the component
-     * @deprecated but still working, not recomendable
-     * @var string|null
-     */
-    public $listenerId = null;
-    
+
     /**
      * Show content for add items to role or show aggregated items
      * @var boolean
@@ -64,18 +59,22 @@ class SelectMultipleComponent extends Component
      */
     public $formType = 'create';
 
-
     protected $queryString = [
         'selectMultipleComponentPage' => ['except' => 1],
     ];
 
-    protected $parentEventListener = 'setSelectedItems';
-
+    /**
+     * Select mode 
+     * "one" or "multiple"
+     *
+     * @var string
+     */
     public $selectMode = 'multiple';
 
     public function mount()
     {
-        $this->executeQuery = false;
+        $this->executeQuery   = false;
+        $this->eventListeners = 'setSelectedItems';
     }
 
     /**
@@ -125,7 +124,7 @@ class SelectMultipleComponent extends Component
     {   
         if (($dotPosition = strpos($key, '.')) !== false) {
             //$key = substr($key,0,$dotPosition);
-            $this->notifyParentComponent('array_value_was_modified');
+            $this->notifyChanges('array_value_was_modified');
         }
     }
 
@@ -151,7 +150,7 @@ class SelectMultipleComponent extends Component
 
         $this->selectedItems[$item] = $item;
         $this->itemAdded($item, $this->selectedItems[$item]);
-        $this->notifyParentComponent('add');
+        $this->notifyChanges('add');
     }
 
     /**
@@ -171,7 +170,7 @@ class SelectMultipleComponent extends Component
         
         unset($this->selectedItems[$item]);
         $this->itemRemoved($item);
-        $this->notifyParentComponent('remove');
+        $this->notifyChanges('remove');
     }
 
     protected function getSelectOneMessage()
@@ -230,13 +229,6 @@ class SelectMultipleComponent extends Component
      */
     protected function getListeners()
     {
-        if ($this->listenerId != null) {
-            return [
-                "{$this->listenerId}.resetInputFields" => 'resetInputFields',
-                "{$this->listenerId}.setSelectedItems" => 'setSelectedItems',
-            ];
-        }
-
         return [
             'resetInputFields' => 'resetInputFields',
             'setSelectedItems' => 'setSelectedItems',
@@ -245,8 +237,8 @@ class SelectMultipleComponent extends Component
 
     public function resetInputFields()
     {
-        $this->resetExcept([            
-            'listenerId'
+        $this->resetExcept([
+            'eventListeners'
         ]);
         $this->resetErrorBag();
         $this->resetValidation();
@@ -254,19 +246,8 @@ class SelectMultipleComponent extends Component
         $this->resetSearch();
     }
 
-    /**
-     * Notify to parent component
-     *
-     * @param string $action
-     * @return void
-     */
-    public function notifyParentComponent($action)
+    protected function notifyChanges($action)
     {
-        if ($this->listenerId != null) {
-            $this->emitUp($this->listenerId.'.'.$this->parentEventListener, $this->selectedItems, $action);
-        }else {
-            $this->emitUp($this->parentEventListener, $this->selectedItems, $action);
-        }
+        $this->notifyEmits($this->selectedItems, $action);
     }
-
 }
