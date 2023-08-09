@@ -71,10 +71,10 @@ class SelectMultipleComponent extends Component
      */
     public $selectMode = 'multiple';
 
-    public function mount()
+    public function mount($eventListeners = 'setSelectedItems')
     {
         $this->executeQuery   = false;
-        $this->eventListeners = 'setSelectedItems';
+        $this->eventListeners = $eventListeners;
     }
 
     /**
