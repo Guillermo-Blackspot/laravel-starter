@@ -10,23 +10,18 @@ class ConditionalRedirect
 {
     use HasRedirects;
 
-    private $solved;
-    private $conditionalRedirectResult;
-    private $callbacks;
-
+    private $conditions = [];
+    private $callbacks  = [
+        'anyOk'    => [],
+        'anyFails' => [],
+    ];
 
     public function __construct($redirects)
     {
         if (isset($redirects[0])) {
             $redirects = $redirects[0];
         }
-        
-        $this->solved = false;
-        $this->conditionalRedirectResult = null;
-        $this->callbacks = [
-            'anyOk' => [],
-            'anyFails' => [],
-        ];
+
         $this->registerRedirects($redirects);        
     }
 
@@ -40,25 +35,13 @@ class ConditionalRedirect
      */
     public function when($condition, $route, $default = '')
     {
-        if ($this->solved) {
-            return $this;
-        }
+        $conditionResult = $condition instanceof \Closure ? $condition() : $condition;
 
-        if ($condition instanceof Closure) {
-            $condition = $condition();
-        }
-
-        if ($condition) {
-            if (is_string($route)) {
-                $this->conditionalRedirectResult = $this->redirectToUrl($route, $default);
-            }elseif ($route instanceof Closure) {
-                $this->conditionalRedirectResult = $route($default);
-            }else{
-                throw new Exception("Action not supported!: [{$route}] ", 1);
-            }
-        }
-
-        $this->solved = $condition && $this->conditionalRedirectResult != null;
+        $this->conditions[] = [
+            'condition' => $conditionResult,
+            'route'     => $route, 
+            'default'   => $default
+        ];
 
         return $this;
     }
@@ -88,20 +71,58 @@ class ConditionalRedirect
         return $this;
     }
 
-    public function redirect($default = '')
+    private function executeOkCallbacks(&$route = '')
     {
-        if ($this->solved) {
-            foreach ($this->callbacks['anyOk'] as $fn) {
-                $fn($this->conditionalRedirectResult);
-            }
-        }else{
-            foreach ($this->callbacks['anyFails'] as $fn) {
-                $fn();
-            }
+        foreach ($this->callbacks['anyOk'] as $fn) {
+            $fn($route);
         }
-        
-        return $this->conditionalRedirectResult ?? $this->redirectToUrl($default);
+    }
+    
+    private function executeFailCallbacks()
+    {
+        foreach ($this->callbacks['anyFails'] as $fn) {
+            $fn();
+        }
+    }
+
+    private function assertConditionedRedirectionIsValid($route)
+    {
+        if ($route !== null && $route !== '' && ! is_string($route) && ! ($route instanceof Closure)) {
+            throw new Exception("Action not supported!: [{$route}] ", 1);
+        }
+    }
+
+    private function resolveConditionedRedirection($route, $default = '')
+    {
+        $this->assertConditionedRedirectionIsValid($route);
+
+        if (is_string($route)) {
+            return $this->redirectToUrl($route);
+        }elseif ($route instanceof Closure) {
+            return $route($default);
+        }
     }
 
 
+    public function redirect($default = '')
+    {
+        $redirectResult = collect($this->conditions)->firstWhere('condition', true);
+
+        // FAILS
+        // RETURNS DEFAULT OR NULL
+        if ($redirectResult == null) {
+            $this->executeFailCallbacks();
+            $this->assertConditionedRedirectionIsValid($default);
+            return $this->redirectToUrl($default);
+        }
+
+        // OK
+        $redirect = $this->resolveConditionedRedirection(
+            $redirectResult, $default
+        );
+
+        $this->executeOkCallbacks($redirect);
+
+        return $redirect;
+    }
 }
