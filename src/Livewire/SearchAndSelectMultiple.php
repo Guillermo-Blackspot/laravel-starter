@@ -20,6 +20,7 @@ class SearchAndSelectMultiple extends Component
     public $showShortCuts            = false;
     public $emitUp                   = 'setSelectedItems';
     public $selectMode               = 'multiple';
+    public $label                    = '';
 
     protected $queryString = [
         'searchAndSelectItemsPage' => ['except' => 1],
@@ -77,7 +78,8 @@ class SearchAndSelectMultiple extends Component
         $this->resetExcept(
             'listenerId',
             'queryString',
-            'emitUp'
+            'emitUp',
+            'selectMode'
         );
         $this->resetErrorBag();
         $this->resetValidation();
@@ -107,6 +109,11 @@ class SearchAndSelectMultiple extends Component
         $this->selectedItems[$item] = $item;
 
         $this->itemAdded($item, $this->selectedItems[$item]);
+
+        if ($this->selectMode == 'one') {
+            $this->resetPage();
+            $this->resetSearch();
+        }
 
         $this->notifyParentComponent('add');
     }
