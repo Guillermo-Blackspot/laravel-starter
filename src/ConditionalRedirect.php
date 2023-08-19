@@ -46,7 +46,6 @@ class ConditionalRedirect
         return $this;
     }
 
-
     /**
      * If any its true do something
      * 
@@ -94,15 +93,15 @@ class ConditionalRedirect
 
     private function resolveConditionedRedirection($route, $default = '')
     {
-        $this->assertConditionedRedirectionIsValid($route);
-
+        //$this->assertConditionedRedirectionIsValid($route, $default);
         if (is_string($route)) {
             return $this->redirectToUrl($route);
         }elseif ($route instanceof Closure) {
             return $route($default);
+        }else {
+            return $this->redirectToUrl($default);
         }
     }
-
 
     public function redirect($default = '')
     {
@@ -118,7 +117,7 @@ class ConditionalRedirect
 
         // OK
         $redirect = $this->resolveConditionedRedirection(
-            $redirectResult, $default
+            $redirectResult['route'], $default['default'] ?? $default
         );
 
         $this->executeOkCallbacks($redirect);
