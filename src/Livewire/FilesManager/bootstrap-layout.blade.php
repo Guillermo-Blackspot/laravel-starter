@@ -1,45 +1,45 @@
 <div class="p-3">
-    <h4 class="text-center header-title"> {{ $fileTitle ?? 'Previsualizar archivo' }}</h4>
-    @if ($isExternal)
-      <code>Archivo externo: {{ $fileAsset }}</code>
-    @else
-      <code>:~ dir$ {{ $fakePath }}</code>
-    @endif
+    <h4 class="text-center header-title"> {{ $title ?? 'Previsualización de archivo' }}</h4>
+    <code>{{ $fileUrl }}</code>
+
     <div class="row">
         <div class="col-12">
             <div class="p-20 text-center" style="padding-bottom: 0px">
 
-            
-            @if ($invalidFile || !in_array($mode, ['SIMPLE-FILE', 'GET-CONTENTS']))
-                <img src="{{ $fileAsset }}">
+            @if ($this->fileType === false)
+                <img src="{{ $fileUrl }}" class="img-fluid">
                 <div class="iframe-responsive">
                     <small>Intentando procesar como imagen ya que no se encontro una extensión de archivo válido (puede no funcionar).</small>
                     <div>Archivo no soportado o no existe</div>
                 </div>
-            @elseif ($mode == 'SIMPLE-FILE')
-                @if (Str::contains($fileType,['image','gift']) )
-                    <img src="{{ $fileAsset }}" class="img-fluid" alt="">
-                @elseif (Str::contains($fileType,'video'))
-                    <video src="{{ $fileAsset }}" controls width="640" height="480" class="img-fluid">Lo sentimos. Este vídeo no puede ser reproducido en tu navegador.</video>
+            @elseif ($mode == self::SIMPLE_FILE_TYPE)
+                @if ($fileType == 'image')
+                    <img src="{{ $fileUrl }}" class="img-fluid" alt="">
+                @elseif ($fileType == 'video')
+                    <video src="{{ $fileUrl }}" controls width="640" height="480" class="img-fluid">Lo sentimos. Este vídeo no puede ser reproducido en tu navegador.</video>
                 @elseif($fileType == 'youtube')
                     <div class="iframe-responsive">
-                        <iframe src="https://www.youtube.com/embed/{{ get_youtube_video_id($fileAsset) }}"
+                        <iframe src="https://www.youtube.com/embed/{{ get_youtube_video_id($fileUrl) }}"
                                 frameborder="0"
                                 title="youtube"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
                         </iframe>
                     </div>
                 @else
-                    <img src="{{ $fileAsset }}">
+                    <img src="{{ $fileUrl }}" class="img-fluid">
                     <div class="iframe-responsive">
                         <small>Intentando procesar como imagen ya que no se encontro una extensión de archivo válido (puede no funcionar).</small>
                         <div>Archivo no soportado o no existe</div>
                     </div>
                 @endif              
-            @elseif ($mode == 'GET-CONTENTS')
+            @elseif ($mode == self::GET_CONTENTS_TYPE)
                 <div class="iframe-responsive">
-                    <iframe src="{{ $fileAsset }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe src="{{ $fileUrl }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
+            @endif
+
+            @if ($description)
+                <p style="mt-4 mb-0 text-secondary w-100 text-left bg-muted p-2">{{ $description }}</p>
             @endif
 
             <div class="text-center">

@@ -3,8 +3,9 @@ namespace BlackSpot\Starter\Livewire\FilesManager;
 
 use BlackSpot\Starter\Traits\App\HasModal;
 use BlackSpot\Starter\Traits\App\HasSweetAlert;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -12,168 +13,114 @@ class PreviewFile extends Component
 {
     use HasSweetAlert, HasModal;
 
-    public $listenerId = 'filesmanager';
-    public $viewLocation, $location = 'bootstrap';
+    public $theme = 'bootstrap';
+    public $mode  = 'simple-file';
+    public $title;
+    public $description;
+    public $fileType;
+    public $fileUrl;
+    public $componentView;
 
+    public const SIMPLE_FILE_TYPE  = 'simple-file';
+    public const GET_CONTENTS_TYPE = 'get-contents';
 
-    public $fullUrl;
-
-    public $fileAsset,
-           $fileType,
-           $fakePath,           
-           $isInsideOfStorage,
-           $isInsideOfPublic,
-           $isExternal,
-           $diskInUse, 
-           $fileUrlUri,
-           $invalidFile,
-           $mode,
-           $fileContent,
-           $fileTitle;
-
-
+    protected $listeners = [
+        'filesmanager.setFile' => 'setFile',
+        'filesmanager.getFileContentAndDisplayIt' => 'setFileFromGetContents',
+    ];
 
     public function mount()
     {
-        $this->fullUrl = url('/');
+        $this->componentView = str_replace('/','.',config('filesmanager.file_viewing_layouts.' . $this->theme));
     }
 
     public function render()
     {        
-        if ($this->viewLocation == null) {
-            $this->viewLocation = str_replace('/','.',config('filesmanager.file_viewing_layouts.bootstrap'));
-        }        
-        
-        return view('livewire.'.$this->viewLocation);
+        return view('livewire.' . $this->componentView);
     }
 
-    protected function getListeners()
-    {
-        return [
-          "{$this->listenerId}.setFile" => 'setFile',
-          "{$this->listenerId}.getFileContentAndDisplayIt" => 'setFileFromGetContents',
-        ];
-    }       
-
     /**
-     * Extract the fileTitle and the file asset link
+     * Extract the file attributes from 
+     * file
      * 
-     * @param string|array $fileAsset
+     * @param string|array $file
      * @param string|null $default
      * @return void
      */
-    public function parseAsset($fileAsset, $default)
+    private function setFileAttributes($file, $default = null)
     {
-        if (is_array($fileAsset)) {
-            $this->fileTitle = $fileAsset[0];
-            $fileAsset = $fileAsset[1];
-        }
-
-        $this->fileAsset = blank($fileAsset) ? $default : $fileAsset;;
-    }
-
-    /**
-     * Validate if is inside of public_html folder
-     */
-    private function insideOfPublic()
-    {
-        if ($this->isInsideOfStorage) {
-            return $this->isInsideOfPublic = false;
-        }
-        
-        $inside = Str::contains($this->fileAsset, $this->fullUrl);
-
-        if ($inside) {
-            $this->fileUrlUri = str_replace($this->fullUrl, ' ', $this->fileAsset);
-            $this->fakePath   = str_replace('/', ' > ', $this->fileUrlUri);
-            if (file_exists(public_path(ltrim(trim($this->fileUrlUri),'/')))) {
-                $this->fileType   = File::mimeType(public_path(ltrim(trim($this->fileUrlUri),'/')));                
+        if (Arr::isAssoc($file)) {
+            $this->title          = $file['title'] ?? null;
+            $this->description    = $file['description'] ?? null;
+            $this->fileUrl        = $file['file'];
+            
+            if (! $this->fileUrl) {
+                $this->fileUrl = $file['defaultFile'] ?? $default;
             }
-        }
+        }else if (is_array($file)) {
+            $this->title          = $file[0];
+            $this->fileUrl        = $file[1];
+            $this->description    = $file[2] ?? null;
 
-        return $this->isInsideOfPublic = $inside;
-    }
-
-    /**
-     * Validate if is inside of storage folder
-     */
-    private function insideOfStorage()
-    {
-        if ($this->isInsideOfPublic) {
-            return $this->isInsideOfStorage = false;
-        }
-
-        /**
-         * Foreach register validators for storage folder validate if its inside
-         */
-
-        $validators = collect(config('filesmanager.file_viewing_disks'));
-
-        return $this->isInsideOfStorage = $validators->some(function ($disk, $key) {
-            $urlReplacer = Storage::disk($disk)->url('/');
-            $filePath    = str_replace($urlReplacer, '', $this->fileAsset);
-            $inside      = Storage::disk($disk)->exists($filePath);
-            if ($inside) {
-                $this->diskInUse  = $disk;
-                $this->fileUrlUri = $filePath;
-                $this->fakePath   = str_replace('/', ' > ', $this->fileUrlUri);
-                $this->fileType   = File::mimeType(Storage::disk($disk)->path($filePath));
+            if (! $this->fileUrl) {
+                $this->fileUrl = $default;
             }
-            return $inside;
-        });
+        }else {
+            $this->file = ! $file ? $default : $file;
+        }
     }
 
-
+    private function setComponentTheme($theme)
+    {
+        $this->theme         = $theme;
+        $this->componentView = str_replace('/','.',config('filesmanager.file_viewing_layouts.'.$theme));
+    }
     
-    public function setFile($location, $fileAsset, $default = null)
-    {
-        $this->sweetAlertClose();    
-
-        $viewLocation       = str_replace('/','.',config('filesmanager.file_viewing_layouts.'.$location));    
-        $this->viewLocation = $viewLocation;
-        $this->location     = $location;
-        $this->mode         = 'SIMPLE-FILE';    
-        $this->parseAsset($fileAsset, $default);
-        $this->insideOfStorage();
-        $this->insideOfPublic();
-        $this->isExternal = $this->isInsideOfStorage == false && $this->isInsideOfPublic == false;
-
-        if ($this->isExternal) {
-            if (Str::contains($this->fileAsset, ['.jpg','.jpeg','.png','.gif'])){
-                $this->fileType = 'image';
-            }elseif (Str::contains($this->fileAsset, ['.mp4'])){
-                $this->fileType = 'video';
-            }elseif (Str::contains($fileAsset,['youtube','you.be'])) {
-                $this->fileType = 'youtube';
-            }
-        }
-        
-        if (is_null($this->fileType)) {
-            $this->invalidFile = true;
-        }
-
-        $this->openModal($this->modalId, $this->location);        
-    }
-
-
-    public function setFileFromGetContents($url, $default = null)
+    public function setFile($theme, $file, $default = null)
     {
         $this->sweetAlertClose();
-        $this->parseAsset($url, $default);
-        
-        //$uriFileAsset   = $this->removeBaseUrlFromAsset($this->fileAsset);
-        $this->fakePath = str_replace('/',' > ',$uriFileAsset);
-        $this->mode     = 'GET-CONTENTS';
-        $this->isExternal = $this->isInsideOfStorage == false && $this->isInsideOfPublic == false;
+        $this->setComponentTheme($theme);
+        $this->setFileAttributes($file, $default);
+
+        if ($this->fileUrl) {
+            $extension = '.' . trim(substr(strrchr($this->fileUrl, '.'), 1));
+    
+            if (in_array($extension, ['.webp','.jpg','.jpeg','.png','.gif'])) {
+                $this->fileType = 'image';
+            }else if (in_array($extension, ['.mp4', '.mov'])) {
+                $this->fileType = 'video';
+            }else if (in_array($extension, ['youtube','you.be'])) {
+                $this->fileType = 'youtube';
+            }else {
+                $this->fileType = 'try_to_image';
+            }
+        }else {
+            $this->fileType = false;;
+        }
+
+        $this->mode = self::SIMPLE_FILE_TYPE;
+
+        $this->openModal($this->modalId, 'bootstrap');
+    }
+
+
+    public function setFileFromGetContents($theme, $file, $default = null)
+    {
+        $this->sweetAlertClose();
+        $this->setComponentTheme($theme);
+        $this->setFileAttributes($file, $default);
+
+        $this->mode = self::GET_CONTENTS_TYPE;
+        $this->openModal($this->modalId, 'bootstrap');
     }
 
     public function resetInputFields()
     {
         $this->reset([
-          'fileAsset',
-          'fileType',
-          'fakePath',
-          'isInsideOfStorage',
+            'title',
+            'description',
+            'fileType',
+            'fileUrl',
         ]);
     }
 }
