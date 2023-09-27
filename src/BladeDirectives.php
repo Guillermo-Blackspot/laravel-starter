@@ -6,7 +6,7 @@ use ArrayAccess;
 
 class BladeDirectives
 {
-    public function jsUrlScript()
+    public static function jsUrlScript()
     {
         return "
             <script>
@@ -22,7 +22,7 @@ class BladeDirectives
     }
 
 
-    public function dispatchBrowserEventsScript()
+    public static function dispatchBrowserEventsScript()
     {
         return "
             <?php if (isset(\$browserEventDetail) || session()->has('browserEventDetail')): ?>        
@@ -38,7 +38,7 @@ class BladeDirectives
         ";
     }
 
-    public function starterScripts()
+    public static function starterScripts()
     {
         return $this->jsUrlScript() . $this->dispatchBrowserEventsScript();
     }
