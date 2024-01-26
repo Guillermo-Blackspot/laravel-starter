@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5cb95f05d0eea7ba575f9b46cef06d31",
+    "content-hash": "3130b73fb9089db9d32f55afd8dcc09f",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -677,28 +677,28 @@
         },
         {
             "name": "mmo-and-friends/estados-municipios-mexico",
-            "version": "v1.0.1",
+            "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mmo-and-friends/estados-municipios-mexico.git",
-                "reference": "8d25249c64346442d04d5332ff0d19b3b1d84dc3"
+                "url": "https://github.com/Guillermo-Blackspot/estados-municipios-mexico.git",
+                "reference": "c32414e96dcbba4cb09aa859b9a18b75ce9eb0d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mmo-and-friends/estados-municipios-mexico/zipball/8d25249c64346442d04d5332ff0d19b3b1d84dc3",
-                "reference": "8d25249c64346442d04d5332ff0d19b3b1d84dc3",
+                "url": "https://api.github.com/repos/Guillermo-Blackspot/estados-municipios-mexico/zipball/c32414e96dcbba4cb09aa859b9a18b75ce9eb0d2",
+                "reference": "c32414e96dcbba4cb09aa859b9a18b75ce9eb0d2",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4|^8.0"
+                "php": "^7.3|^8.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "MmoAndFriends\\Mexico\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -710,10 +710,9 @@
             ],
             "description": "Un paquete de php y javascript de los estados y municipios de mexico, soporta el comando mexico:publish para laravel",
             "support": {
-                "issues": "https://github.com/mmo-and-friends/estados-municipios-mexico/issues",
-                "source": "https://github.com/mmo-and-friends/estados-municipios-mexico/tree/v1.0.1"
+                "source": "https://github.com/Guillermo-Blackspot/estados-municipios-mexico/tree/dev-master"
             },
-            "time": "2022-04-11T20:31:48+00:00"
+            "time": "2024-01-26T02:06:47+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -2004,6 +2003,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "mmo-and-friends/estados-municipios-mexico": 20,
         "guillermo-rod/laravel-blade-ui": 20
     },
     "prefer-stable": false,

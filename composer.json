@@ -27,8 +27,14 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.3",
-        "mmo-and-friends/estados-municipios-mexico": "^1.0",
+        "mmo-and-friends/estados-municipios-mexico": "dev-main",
         "guillermo-rod/laravel-blade-ui": "dev-main",
         "cviebrock/eloquent-sluggable": "^8.0"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Guillermo-Blackspot/estados-municipios-mexico"
+        }
+    ]
 }
